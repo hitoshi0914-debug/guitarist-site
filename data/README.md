@@ -23,3 +23,9 @@
 
 ## スプレッドシートから取り込む
 `npm run sync:sheets` で、スプレッドシートの各シートをCSVとして取り込みます（`scripts/sync-sheets.mjs` 参照）。
+
+## 機材の画像（gear.csv）
+
+- `illust`: 画像がないときに出すイメージ図の形。`superstrat`（ストラト型）/ `singlecut`（レスポール型）/ `doublecut`（SG型）/ `amp-head` / `amp-stack` / `amp-combo` / `modeler` / `pedal`
+- `image_url`: 実物の写真。**使用許可のあるもの（CCライセンス・パブリックドメイン等）だけ**。メーカー公式サイトやSNSの写真は転載しない
+- `image_credit` / `image_license` / `image_source_url`: 写真の作者・ライセンス（例: CC BY-SA 4.0）・元ページ。`image_url` を入れたら必ず3つとも埋める

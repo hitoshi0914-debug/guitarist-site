@@ -36,7 +36,7 @@ export type Artist = Row & {
   color: string; checked_on: string; source_url: string; source_label: string;
 };
 export type Timeline = Row & { artist_id: string; year_from: string; year_to: string; band: string; role_ja: string; source_url: string; source_label: string; checked_on: string };
-export type Gear = Row & { artist_id: string; category: string; item: string; maker: string; note_ja: string; source_url: string; source_label: string; checked_on: string };
+export type Gear = Row & { artist_id: string; category: string; item: string; maker: string; illust: string; note_ja: string; image_url: string; image_credit: string; image_license: string; image_source_url: string; source_url: string; source_label: string; checked_on: string };
 export type Song = Row & { artist_id: string; title: string; credit: string; year: string; youtube_id: string; note_ja: string; source_url: string; source_label: string; checked_on: string };
 export type JapanVisit = Row & { artist_id: string; date: string; event_ja: string; place_ja: string; source_url: string; source_label: string; checked_on: string };
 export type Term = Row & { term_ja: string; reading: string; term_en: string; desc_ja: string };

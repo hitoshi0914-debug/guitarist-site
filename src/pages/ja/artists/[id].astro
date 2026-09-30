@@ -3,6 +3,7 @@ import Base from '../../../layouts/Base.astro';
 import ArtistCard from '../../../components/ArtistCard.astro';
 import TrustBar from '../../../components/TrustBar.astro';
 import SourceLink from '../../../components/SourceLink.astro';
+import GearImage from '../../../components/GearImage.astro';
 import DraftBadge from '../../../components/DraftBadge.astro';
 import EditorNote from '../../../components/EditorNote.astro';
 import AdSlot from '../../../components/AdSlot.astro';
@@ -70,19 +71,20 @@ const sns = [
   <section class="section">
     <h2 class="h2">使用機材</h2>
     {gr.length === 0 ? <p class="muted">調査中です。</p> : (
-      <table class="table">
-        <thead><tr><th>種類</th><th>機材</th><th>メモ</th><th>出典</th></tr></thead>
-        <tbody>
-          {gr.map((g) => (
-            <tr>
-              <td>{GEAR_CATEGORIES[g.category] ?? g.category}</td>
-              <td>{g.maker} {g.item} <DraftBadge row={g} /></td>
-              <td>{g.note_ja}</td>
-              <td><SourceLink url={g.source_url} label={g.source_label} /></td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <ul class="gear-list">
+        {gr.map((g) => (
+          <li class="gear-item">
+            <GearImage row={g} color={a.color || undefined} size="sm" />
+            <div>
+              <span class="muted">{GEAR_CATEGORIES[g.category] ?? g.category}</span>
+              <div><strong>{g.maker}</strong> {g.item} <DraftBadge row={g} /></div>
+              <p class="gear-note">{g.note_ja}</p>
+              <SourceLink url={g.source_url} label={g.source_label} />
+            </div>
+          </li>
+        ))}
+      </ul>
+      <p class="muted small">※ 機材の画像はイメージ図です。実物の写真は、使用許可のあるもの（CCライセンス等）だけを出典つきで載せていきます。</p>
     )}
     <p><a class="more" href="/ja/gear/">4人の機材を比較する</a></p>
   </section>

@@ -4,6 +4,7 @@ import TrustBar from '../../components/TrustBar.astro';
 import SourceLink from '../../components/SourceLink.astro';
 import DraftBadge from '../../components/DraftBadge.astro';
 import AdSlot from '../../components/AdSlot.astro';
+import GearImage from '../../components/GearImage.astro';
 import { artists, gear, GEAR_CATEGORIES, latestCheck } from '../../lib/data';
 const cats = Object.entries(GEAR_CATEGORIES);
 ---
@@ -32,8 +33,11 @@ const cats = Object.entries(GEAR_CATEGORIES);
                 <td>
                   {items.length === 0 ? <span class="muted">調査中</span> : items.map((g) => (
                     <div class="gear-item">
-                      <strong>{g.maker}</strong> {g.item}
-                      <div class="gear-meta"><SourceLink url={g.source_url} label={g.source_label} /><DraftBadge row={g} /></div>
+                      <GearImage row={g} color={a.color || undefined} size="sm" />
+                      <div>
+                        <strong>{g.maker}</strong> {g.item}
+                        <div class="gear-meta"><SourceLink url={g.source_url} label={g.source_label} /><DraftBadge row={g} /></div>
+                      </div>
                     </div>
                   ))}
                 </td>
@@ -44,6 +48,8 @@ const cats = Object.entries(GEAR_CATEGORIES);
       </tbody>
     </table>
   </div>
+
+  <p class="muted small">※ 機材の画像はイメージ図です。実物の写真は、使用許可のあるもの（CCライセンス等）だけを出典つきで載せていきます。</p>
 
   <AdSlot />
 
