@@ -8,11 +8,11 @@ export const SITE = {
   gaId: import.meta.env.PUBLIC_GA_ID ?? '',
 };
 
-// ストリートチーム日本のSNS（URLを受け取ったら埋める。空のものは「準備中」表示）
+// ストリートチーム日本のSNS（空のものは「準備中」表示）
 export const STREET_TEAM = {
-  instagram: '',
-  x: '',
-  facebook: '',
+  instagram: 'https://www.instagram.com/hurricanejapan/',
+  x: 'https://x.com/HurricaneJapan',
+  facebook: 'https://www.facebook.com/profile.php?id=61586956209054',
   joinForm: '',
 };
 

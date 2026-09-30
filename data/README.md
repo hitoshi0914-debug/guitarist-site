@@ -16,7 +16,7 @@
 ## 共通の列
 - `status` … `draft`（AIの下書き・確認待ち）／`approved`（本人確認済み＝公開）
   - 本番ビルドでは `approved` の行だけが表示されます。
-  - `npm run dev` または環境変数 `SHOW_DRAFTS=1` のときは `draft` も「確認待ち」バッジ付きで表示されます。
+  - `npm run dev`、環境変数 `SHOW_DRAFTS=1`、Cloudflare Pages の master 以外のブランチ（確認用）では `draft` も「確認待ち」バッジ付きで表示されます。
 - `source_url` … 出典URL
 - `source_label` … `公式` または `インタビュー`
 - `checked_on` … 確認日（YYYY-MM-DD）

@@ -6,7 +6,10 @@ import { parse } from 'csv-parse/sync';
 const DATA_DIR = path.resolve(process.cwd(), 'data');
 
 // 本番では status=approved の行だけ出す。開発中・プレビューでは下書きも出す。
-export const SHOW_DRAFTS = import.meta.env.DEV || process.env.SHOW_DRAFTS === '1';
+// Cloudflare Pages は CF_PAGES_BRANCH を自動で渡すので、master 以外のブランチ（確認用）は下書き込みになる。
+const branch = process.env.CF_PAGES_BRANCH;
+export const SHOW_DRAFTS =
+  import.meta.env.DEV || process.env.SHOW_DRAFTS === '1' || (!!branch && branch !== 'master');
 
 type Row = Record<string, string> & { status?: string };
 

@@ -27,4 +27,4 @@ npm run build      # 本番用（approved のみ）を dist/ に出力
 - ダッシュボード: https://dash.cloudflare.com/ → Workers & Pages → 作成 → Pages → Git に接続 → このリポジトリ
 - ビルドコマンド: `npm run build` ／ 出力ディレクトリ: `dist`
 - 環境変数（あとで）: `PUBLIC_GA_ID`（GA4）、`PUBLIC_ADSENSE_CLIENT`（アドセンス）、`SHEET_ID`（スプレッドシート）
-- プレビュー環境だけ `SHOW_DRAFTS=1` にすると、下書きも確認できます
+- master 以外のブランチ（例: preview）は自動で下書き込みの確認用ページになります → https://preview.shred-queens.pages.dev
