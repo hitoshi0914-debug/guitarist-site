@@ -29,4 +29,4 @@
 
 - `illust`: 画像がないときに出すイメージ図の形。`superstrat`（ストラト型）/ `singlecut`（レスポール型）/ `doublecut`（SG型）/ `amp-head` / `amp-stack` / `amp-combo` / `modeler` / `pedal`
 - `image_url`: 実物の写真（サイト内に置く場合は `public/images/gear/` に保存し `/images/gear/xxx.jpg` と書く）。**使用許可のあるもの（CCライセンス・パブリックドメイン等）だけ**。メーカー公式サイトやSNSの写真は転載しない
-- `image_credit` / `image_license` / `image_source_url`: 写真の作者・ライセンス（例: CC BY-SA 4.0）・元ページ。`image_url` を入れたら必ず3つとも埋める
+- `image_credit` / `image_license` / `image_source_url`: 写真の作者・ライセンス（例: CC BY-SA 4.0）・元ページ。メーカーから使用許可を得た商品画像は `image_license` を「メーカー許諾」、`image_credit` を社名にすると「画像提供：社名」と表示（許可の記録は /mnt/project-files/shred-queens/画像使用許可の記録.md）。`image_url` を入れたら必ず3つとも埋める

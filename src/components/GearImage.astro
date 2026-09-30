@@ -1,5 +1,5 @@
 ---
-// 機材の画像。image_url（CCなど掲載許可のある写真）があれば写真＋クレジット、
+// 機材の画像。image_url（CC写真、またはメーカー許諾の商品画像＝image_license「メーカー許諾」）があれば写真＋クレジット、
 // なければ自作のシルエットイラスト（illust 列で形を選ぶ）を表示する。
 import type { Gear } from '../lib/data';
 interface Props { row: Gear; color?: string; size?: 'sm' | 'md' }
@@ -12,8 +12,12 @@ const kind = row.illust || (row.category === 'guitar' ? 'superstrat' : row.categ
   <figure class={`gear-img gear-img--${size}`}>
     <a href={link || undefined} target="_blank" rel="noopener" title={`${row.maker} 公式サイトへ`}><img src={row.image_url} alt={`${alt}（${row.image_note || '写真'}）`} loading="lazy" decoding="async" /></a>
     <figcaption>
-      写真: {row.image_source_url ? <a href={row.image_source_url} target="_blank" rel="noopener">{row.image_credit || '出典'}</a> : row.image_credit}
-      {row.image_license && <> ／ {row.image_license}</>}
+      {row.image_license === 'メーカー許諾' ? (
+        <>画像提供：{row.image_source_url ? <a href={row.image_source_url} target="_blank" rel="noopener">{row.image_credit}</a> : row.image_credit}</>
+      ) : (
+        <>写真: {row.image_source_url ? <a href={row.image_source_url} target="_blank" rel="noopener">{row.image_credit || '出典'}</a> : row.image_credit}
+        {row.image_license && <> ／ {row.image_license}</>}</>
+      )}
     </figcaption>
   </figure>
 ) : (
