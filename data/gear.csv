@@ -1,3 +1,12 @@
 artist_id,category,item,maker,note_ja,source_url,source_label,checked_on,status
-nita-strauss,guitar,JIVA シリーズ（シグネチャー）,Ibanez,Ibanez初の女性シグネチャーモデル,https://www.ibanez.com/,公式,,draft
-courtney-cox,guitar,Horus-M3 CC（シグネチャー）,Caparison,Caparison初の女性シグネチャーモデル,https://cc-shred.com/,公式,,draft
+nita-strauss,guitar,JIVA シリーズ（JIVA10・JIVAX2・JIVAJR など）,Ibanez,本人のシグネチャーモデル。ピックアップはDiMarzio Pandemoniumシグネチャー,https://www.ibanez.com/eu/artists/detail/568.html,公式,2026-09-30,draft
+nita-strauss,amp,JVM410HJS,Marshall,Marshallと契約した当時（2016年ごろ）の記事でメインアンプとして紹介,https://www.musicradar.com/news/guitars/nita-strauss-signs-with-marshall-amps-645419,インタビュー,2026-09-30,draft
+nita-strauss,amp,CODE25,Marshall,同じ記事で持ち運び用として紹介,https://www.musicradar.com/news/guitars/nita-strauss-signs-with-marshall-amps-645419,インタビュー,2026-09-30,draft
+courtney-cox,guitar,Horus-M3 CC（シグネチャー）,Caparison,2018年に発表された本人のシグネチャーモデル,https://www.premierguitar.com/caparison-guitars-announces-the-courtney-cox-signature-horus-m3-cc,インタビュー,2026-09-30,draft
+britt-lightning,guitar,Wild Card,Charvel,フロイドローズ付きで使用（2017年のインタビュー）,https://www.guitarworld.com/artists/vixen-brittany-denaro-interview,インタビュー,2026-09-30,draft
+britt-lightning,guitar,Les Paul,Gibson,Vixenのライブで使用（2017年のインタビュー）,https://www.guitarworld.com/artists/vixen-brittany-denaro-interview,インタビュー,2026-09-30,draft
+britt-lightning,amp,GrandMeister Deluxe 40,Hughes & Kettner,メーカー公式のアーティストページで紹介,https://hughes-and-kettner.com/artist/britt-lightning/,公式,2026-09-30,draft
+britt-lightning,amp,JCM2000,Marshall,スタックで使用（2017年のインタビュー）,https://www.guitarworld.com/artists/vixen-brittany-denaro-interview,インタビュー,2026-09-30,draft
+britt-lightning,effects,コンパクトエフェクター各種,MOOER,メーカー公式のアーティスト。移動が多いツアー向きと本人談,https://www.mooeraudio.com/artists_xq/1058426021246201856.html,公式,2026-09-30,draft
+anna-cara,guitar,SG（カスタムショップ製 SG Jr など）,Gibson,「Gibson SGが特に好き」と本人談,https://www.guitarguitar.co.uk/news/142352/,インタビュー,2026-09-30,draft
+anna-cara,amp,Kemper Profiler,Kemper,「安定していて毎回すごくいい音」と本人談,https://www.guitarguitar.co.uk/news/142352/,インタビュー,2026-09-30,draft
