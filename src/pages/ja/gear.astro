@@ -4,13 +4,24 @@ import TrustBar from '../../components/TrustBar.astro';
 import SourceLink from '../../components/SourceLink.astro';
 import DraftBadge from '../../components/DraftBadge.astro';
 import AdSlot from '../../components/AdSlot.astro';
-import { artists, gear, GEAR_CATEGORIES, latestCheck } from '../../lib/data';
+import GearVideo from '../../components/GearVideo.astro';
+import GearImage from '../../components/GearImage.astro';
+import { artists, gear, gearVideos, GEAR_CATEGORIES, latestCheck } from '../../lib/data';
 const cats = Object.entries(GEAR_CATEGORIES);
 ---
 <Base title="機材比較" description="ニタ・ストラウス、コートニー・コックス、ブリット・ライトニング、アンナ・カーラの使用機材（ギター・アンプ・エフェクター）を出典つきで比較。">
   <h1 class="h1">機材比較</h1>
   <TrustBar checkedOn={latestCheck(gear)} />
   <p>4人の使用機材を種類ごとに横並びで比べられます。各機材には出典と「公式」「インタビュー」のラベルを付けています。用語がわからないときは<a href="/ja/glossary/">機材用語集</a>へ。</p>
+
+  {gearVideos.length > 0 && (
+    <section class="section">
+      <h2 class="h2">動画で見る機材</h2>
+      <div class="video-grid">
+        {gearVideos.map((v) => <GearVideo row={v} name={artists.find((a) => a.id === v.artist_id)?.name_ja} />)}
+      </div>
+    </section>
+  )}
 
   <div class="filter" role="group" aria-label="種類で絞り込み">
     <button type="button" class="chip" data-filter="all" aria-pressed="true">すべて</button>
@@ -32,8 +43,12 @@ const cats = Object.entries(GEAR_CATEGORIES);
                 <td>
                   {items.length === 0 ? <span class="muted">調査中</span> : items.map((g) => (
                     <div class="gear-item">
-                      <strong>{g.maker}</strong> {g.item}
-                      <div class="gear-meta"><SourceLink url={g.source_url} label={g.source_label} /><DraftBadge row={g} /></div>
+                      <GearImage row={g} color={a.color || undefined} size="sm" />
+                      <div>
+                        {g.maker_url ? <a class="gear-name" href={g.maker_url} target="_blank" rel="noopener"><strong>{g.maker}</strong> {g.item}</a> : <><strong>{g.maker}</strong> {g.item}</>}
+{g.image_note && <div class="muted small">※{g.image_note}</div>}
+                        <div class="gear-meta"><SourceLink url={g.source_url} label={g.source_label} /><DraftBadge row={g} /></div>
+                      </div>
                     </div>
                   ))}
                 </td>
@@ -44,6 +59,8 @@ const cats = Object.entries(GEAR_CATEGORIES);
       </tbody>
     </table>
   </div>
+
+  <p class="muted small">※ 機材の写真は、使用許可をいただいたメーカーの商品画像（「画像提供」と表示）と、Wikimedia Commonsの自由に使える写真（作者・ライセンスを表示）です。写真のない機材はイメージ図です。</p>
 
   <AdSlot />
 

@@ -3,12 +3,12 @@
 //   1. スプレッドシートを「リンクを知っている全員が閲覧可」にする（編集権限は渡さない）
 //   2. 環境変数 SHEET_ID にスプレッドシートのID（URLの /d/ と /edit の間）を入れる
 //   3. npm run sync:sheets
-// シート名は data/ のファイル名（artists, timeline, gear, songs, japan, glossary, news）と同じにする。
+// シート名は data/ のファイル名（artists, timeline, gear, gear_videos, songs, japan, glossary, news）と同じにする。
 import fs from 'node:fs';
 import path from 'node:path';
 
 const SHEET_ID = process.env.SHEET_ID;
-const SHEETS = ['artists', 'timeline', 'gear', 'songs', 'japan', 'glossary', 'news'];
+const SHEETS = ['artists', 'timeline', 'gear', 'gear_videos', 'songs', 'japan', 'glossary', 'news'];
 
 if (!SHEET_ID) {
   console.log('SHEET_ID が未設定なので、リポジトリ内の data/*.csv をそのまま使います。');

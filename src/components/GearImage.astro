@@ -1,0 +1,97 @@
+---
+// 機材の画像。image_url（CC写真、またはメーカー許諾の商品画像＝image_license「メーカー許諾」）があれば写真＋クレジット、
+// なければ自作のシルエットイラスト（illust 列で形を選ぶ）を表示する。
+import type { Gear } from '../lib/data';
+interface Props { row: Gear; color?: string; size?: 'sm' | 'md' }
+const { row, color = 'var(--accent)', size = 'md' } = Astro.props;
+const alt = `${row.maker} ${row.item}`;
+const link = row.maker_url || '';
+const kind = row.illust || (row.category === 'guitar' ? 'superstrat' : row.category === 'amp' ? 'amp-head' : 'pedal');
+---
+{row.image_url ? (
+  <figure class={`gear-img gear-img--${size}`}>
+    <a href={link || undefined} target="_blank" rel="noopener" title={`${row.maker} 公式サイトへ`}><img src={row.image_url} alt={`${alt}（${row.image_note || '写真'}）`} loading="lazy" decoding="async" /></a>
+    <figcaption>
+      {row.image_license === 'メーカー許諾' ? (
+        <>画像提供：{row.image_source_url ? <a href={row.image_source_url} target="_blank" rel="noopener">{row.image_credit}</a> : row.image_credit}</>
+      ) : (
+        <>写真: {row.image_source_url ? <a href={row.image_source_url} target="_blank" rel="noopener">{row.image_credit || '出典'}</a> : row.image_credit}
+        {row.image_license && <> ／ {row.image_license}</>}</>
+      )}
+    </figcaption>
+  </figure>
+) : (
+  <figure class={`gear-img gear-img--${size} gear-img--illust`} style={`--gear:${color}`}>
+    <a href={link || undefined} target="_blank" rel="noopener" title={`${row.maker} 公式サイトへ`}>
+    <svg viewBox="0 0 120 120" role="img" aria-label={`${alt}（イメージイラスト）`}>
+      {kind === 'superstrat' && (
+        <g>
+          <rect x="56" y="6" width="8" height="54" rx="2" class="neck" />
+          <path d="M52 2h16l-2 10H54z" class="head" />
+          <path d="M60 56c-10-6-26-10-28 2-2 9 8 12 6 20-2 10-12 14-6 24 6 10 22 12 28 12s22-2 28-12c6-10-4-14-6-24-2-8 8-11 6-20-2-12-18-8-28-2z" class="body" />
+          <rect x="50" y="74" width="20" height="5" rx="2" class="part" /><rect x="50" y="86" width="20" height="5" rx="2" class="part" /><rect x="52" y="98" width="16" height="4" rx="1" class="part" />
+        </g>
+      )}
+      {kind === 'singlecut' && (
+        <g>
+          <rect x="56" y="6" width="8" height="54" rx="2" class="neck" />
+          <path d="M51 2h18l-1 10H52z" class="head" />
+          <path d="M60 56c-4-4-10-6-14-2-6 6 2 12-6 18-8 7-12 14-8 24 5 12 20 16 28 16s23-4 28-16c4-10 0-17-8-24-6-5-4-12-8-17-4-4-8-2-12 1z" class="body" />
+          <rect x="50" y="76" width="20" height="6" rx="2" class="part" /><rect x="50" y="90" width="20" height="6" rx="2" class="part" /><circle cx="80" cy="100" r="3" class="part" /><circle cx="86" cy="92" r="3" class="part" />
+        </g>
+      )}
+      {kind === 'doublecut' && (
+        <g>
+          <rect x="56" y="6" width="8" height="58" rx="2" class="neck" />
+          <path d="M51 2h18l-1 10H52z" class="head" />
+          <path d="M60 64c-6-2-10-12-18-12-6 0-6 8-4 14 2 8-10 12-8 26 2 12 16 18 30 18s28-6 30-18c2-14-10-18-8-26 2-6 2-14-4-14-8 0-12 10-18 12z" class="body" />
+          <rect x="50" y="80" width="20" height="6" rx="2" class="part" /><rect x="50" y="94" width="20" height="5" rx="2" class="part" /><circle cx="82" cy="102" r="3" class="part" />
+        </g>
+      )}
+      {kind === 'amp-head' && (
+        <g>
+          <rect x="18" y="38" width="84" height="44" rx="6" class="body" />
+          <rect x="26" y="46" width="68" height="12" rx="2" class="neck" />
+          {[34, 46, 58, 70, 82].map((x) => <circle cx={x} cy="70" r="4" class="part" />)}
+          <rect x="48" y="30" width="24" height="8" rx="3" class="head" />
+        </g>
+      )}
+      {kind === 'amp-stack' && (
+        <g>
+          <rect x="24" y="8" width="72" height="26" rx="4" class="body" />
+          {[36, 48, 60, 72, 84].map((x) => <circle cx={x} cy="21" r="3.5" class="part" />)}
+          <rect x="24" y="38" width="72" height="76" rx="4" class="body" />
+          <rect x="30" y="44" width="60" height="64" rx="3" class="neck" />
+          {[[45, 61], [75, 61], [45, 91], [75, 91]].map(([x, y]) => <circle cx={x} cy={y} r="11" class="part" />)}
+        </g>
+      )}
+      {kind === 'amp-combo' && (
+        <g>
+          <rect x="20" y="22" width="80" height="80" rx="6" class="body" />
+          <rect x="26" y="28" width="68" height="14" rx="2" class="neck" />
+          {[34, 46, 58, 70, 82].map((x) => <circle cx={x} cy="35" r="3" class="part" />)}
+          <rect x="26" y="48" width="68" height="48" rx="3" class="neck" />
+          <circle cx="60" cy="72" r="18" class="part" />
+        </g>
+      )}
+      {kind === 'modeler' && (
+        <g>
+          <path d="M20 48c0-16 12-26 40-26s40 10 40 26v34H20z" class="body" />
+          <rect x="30" y="40" width="30" height="16" rx="2" class="neck" />
+          {[70, 82, 30, 42, 54, 66, 78, 90].map((x, i) => <circle cx={x} cy={i < 2 ? 48 : 70} r="4" class="part" />)}
+          <rect x="16" y="82" width="88" height="10" rx="3" class="head" />
+        </g>
+      )}
+      {kind === 'pedal' && (
+        <g>
+          <rect x="34" y="20" width="52" height="84" rx="8" class="body" />
+          <circle cx="47" cy="36" r="6" class="part" /><circle cx="73" cy="36" r="6" class="part" /><circle cx="60" cy="52" r="3" class="head" />
+          <rect x="42" y="66" width="36" height="28" rx="4" class="neck" />
+          <circle cx="60" cy="80" r="6" class="part" />
+        </g>
+      )}
+    </svg>
+    </a>
+    <figcaption>イメージ図</figcaption>
+  </figure>
+)}
