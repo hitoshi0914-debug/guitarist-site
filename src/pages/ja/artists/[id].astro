@@ -3,11 +3,12 @@ import Base from '../../../layouts/Base.astro';
 import ArtistCard from '../../../components/ArtistCard.astro';
 import TrustBar from '../../../components/TrustBar.astro';
 import SourceLink from '../../../components/SourceLink.astro';
+import GearVideo from '../../../components/GearVideo.astro';
 import GearImage from '../../../components/GearImage.astro';
 import DraftBadge from '../../../components/DraftBadge.astro';
 import EditorNote from '../../../components/EditorNote.astro';
 import AdSlot from '../../../components/AdSlot.astro';
-import { artists, timeline, gear, songs, japan, byArtist, latestCheck, GEAR_CATEGORIES, type Artist } from '../../../lib/data';
+import { artists, timeline, gear, gearVideos, songs, japan, byArtist, latestCheck, GEAR_CATEGORIES, type Artist } from '../../../lib/data';
 
 export function getStaticPaths() {
   return artists.map((artist) => ({ params: { id: artist.id }, props: { artist } }));
@@ -15,6 +16,7 @@ export function getStaticPaths() {
 const { artist: a } = Astro.props as { artist: Artist };
 const tl = byArtist(timeline, a.id).sort((x, y) => (x.year_from || '9999').localeCompare(y.year_from || '9999'));
 const gr = byArtist(gear, a.id);
+const gv = byArtist(gearVideos, a.id);
 const sg = byArtist(songs, a.id);
 const jp = byArtist(japan, a.id);
 const checkedOn = latestCheck([a], tl, gr, sg, jp);
@@ -86,6 +88,7 @@ const sns = [
       </ul>
       <p class="muted small">※ 機材の画像はイメージ図です。実物の写真は、使用許可のあるもの（CCライセンス等）だけを出典つきで載せていきます。</p>
     )}
+    {gv.length > 0 && <div class="video-grid gear-videos">{gv.map((v) => <GearVideo row={v} />)}</div>}
     <p><a class="more" href="/ja/gear/">4人の機材を比較する</a></p>
   </section>
 

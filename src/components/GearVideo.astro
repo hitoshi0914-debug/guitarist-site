@@ -1,0 +1,15 @@
+---
+// 機材が映る公式・メディアのYouTube動画（YouTubeの埋め込み機能で表示＝転載ではない）
+import type { GearVideo } from '../lib/data';
+import SourceLink from './SourceLink.astro';
+import DraftBadge from './DraftBadge.astro';
+interface Props { row: GearVideo; name?: string }
+const { row: v, name } = Astro.props;
+---
+<figure class="video">
+  <iframe src={`https://www.youtube-nocookie.com/embed/${v.youtube_id}`} title={v.title_ja} loading="lazy" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+  <figcaption>
+    {name && <strong>{name}：</strong>}{v.title_ja}（動画: {v.channel}）
+    <br /><span class="muted">{v.note_ja}</span> <SourceLink url={v.source_url} label={v.source_label} /> <DraftBadge row={v} />
+  </figcaption>
+</figure>

@@ -8,6 +8,7 @@
 | artists.csv | 人物（4人）。カード・要点・SNS・写真クレジット |
 | timeline.csv | バンド変遷（年表） |
 | gear.csv | 使用機材 |
+| gear_videos.csv | 機材が映る動画（YouTube埋め込み。メーカー・販売店・音楽メディアの公式チャンネルのみ） |
 | songs.csv | おすすめ曲（公式YouTube） |
 | japan.csv | 来日情報 |
 | glossary.csv | 機材用語集 |

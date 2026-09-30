@@ -204,3 +204,4 @@ a.tcard:hover { transform: translateY(-4px) rotate(-.5deg); box-shadow: 0 16px 4
 .gear-list .gear-item { padding: 12px 0; border-bottom: 1px solid #2a2a33; margin: 0; }
 .gear-note { margin: 4px 0; font-size: 14px; }
 .small { font-size: 12px; }
+.gear-videos { margin: 16px 0; }
