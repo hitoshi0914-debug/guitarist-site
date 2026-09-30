@@ -3,6 +3,7 @@ import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { SITE } from '../lib/site';
+import { SHOW_DRAFTS } from '../lib/data';
 
 interface Props {
   title?: string;
@@ -23,6 +24,7 @@ const enPath = Astro.url.pathname.replace(/^\/ja\//, '/en/');
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
+    {SHOW_DRAFTS && <meta name="robots" content="noindex, nofollow" />}
     <link rel="canonical" href={canonical} />
     <link rel="alternate" hreflang="ja" href={canonical} />
     {hasEnglish && <link rel="alternate" hreflang="en" href={new URL(enPath, SITE.url).href} />}
