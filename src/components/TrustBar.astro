@@ -1,0 +1,9 @@
+---
+// ページ上部の「確認日」表示
+interface Props { checkedOn?: string; }
+const { checkedOn } = Astro.props;
+---
+<p class="trust-bar">
+  <span class="trust-item">確認日：{checkedOn ? <time datetime={checkedOn}>{checkedOn.replaceAll('-', '/')}</time> : '確認待ち'}</span>
+  <span class="trust-item">出典は各項目のリンクから確認できます</span>
+</p>

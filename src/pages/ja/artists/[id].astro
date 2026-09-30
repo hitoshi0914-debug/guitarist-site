@@ -1,0 +1,133 @@
+---
+import Base from '../../../layouts/Base.astro';
+import ArtistCard from '../../../components/ArtistCard.astro';
+import TrustBar from '../../../components/TrustBar.astro';
+import SourceLink from '../../../components/SourceLink.astro';
+import DraftBadge from '../../../components/DraftBadge.astro';
+import EditorNote from '../../../components/EditorNote.astro';
+import AdSlot from '../../../components/AdSlot.astro';
+import { artists, timeline, gear, songs, japan, byArtist, latestCheck, GEAR_CATEGORIES, type Artist } from '../../../lib/data';
+
+export function getStaticPaths() {
+  return artists.map((artist) => ({ params: { id: artist.id }, props: { artist } }));
+}
+const { artist: a } = Astro.props as { artist: Artist };
+const tl = byArtist(timeline, a.id).sort((x, y) => (x.year_from || '9999').localeCompare(y.year_from || '9999'));
+const gr = byArtist(gear, a.id);
+const sg = byArtist(songs, a.id);
+const jp = byArtist(japan, a.id);
+const checkedOn = latestCheck([a], tl, gr, sg, jp);
+const points = a.points_ja.split('|').filter(Boolean);
+const years = (f: string, t: string) => (!f ? '時期調査中' : t === f ? f : `${f}〜${t}`);
+const sns = [
+  ['公式サイト', a.official_site], ['Instagram', a.instagram], ['X', a.x],
+  ['Facebook', a.facebook], ['YouTube', a.youtube], ['TikTok', a.tiktok],
+].filter(([, url]) => url);
+---
+<Base title={`${a.name_ja}（${a.name_en}）`} description={`${a.name_ja}（${a.name_en}）の経歴・バンド変遷・使用機材・おすすめ曲・来日情報・公式SNSを出典つきでまとめています。`}>
+  <nav class="crumbs"><a href="/ja/">トップ</a> / <span>{a.name_ja}</span></nav>
+
+  <section class="artist-top">
+    <ArtistCard artist={a} size="large" link={false} />
+    <div class="artist-summary">
+      <p class="kicker">{a.name_en}</p>
+      <h1 class="h1">{a.name_ja} <DraftBadge row={a} /></h1>
+      <TrustBar checkedOn={checkedOn} />
+      <ul class="points">
+        {points.map((p) => <li>{p}</li>)}
+      </ul>
+      <SourceLink url={a.source_url} label={a.source_label} />
+      {a.photo_credit && (
+        <p class="photo-credit">写真：<a href={a.photo_source_url} target="_blank" rel="noopener noreferrer">{a.photo_credit}</a>{a.photo_license && `（${a.photo_license}）`}</p>
+      )}
+    </div>
+  </section>
+
+  <AdSlot />
+
+  <section class="section">
+    <h2 class="h2">経歴</h2>
+    <p>{a.bio_ja}</p>
+  </section>
+
+  <section class="section">
+    <h2 class="h2">バンド変遷</h2>
+    {tl.length === 0 ? <p class="muted">調査中です。</p> : (
+      <ol class="timeline">
+        {tl.map((t) => (
+          <li>
+            <span class="tl-year">{years(t.year_from, t.year_to)}</span>
+            <span class="tl-band">{t.band}</span>
+            <span class="tl-role">{t.role_ja}</span>
+            <SourceLink url={t.source_url} label={t.source_label} />
+            <DraftBadge row={t} />
+          </li>
+        ))}
+      </ol>
+    )}
+  </section>
+
+  <section class="section">
+    <h2 class="h2">使用機材</h2>
+    {gr.length === 0 ? <p class="muted">調査中です。</p> : (
+      <table class="table">
+        <thead><tr><th>種類</th><th>機材</th><th>メモ</th><th>出典</th></tr></thead>
+        <tbody>
+          {gr.map((g) => (
+            <tr>
+              <td>{GEAR_CATEGORIES[g.category] ?? g.category}</td>
+              <td>{g.maker} {g.item} <DraftBadge row={g} /></td>
+              <td>{g.note_ja}</td>
+              <td><SourceLink url={g.source_url} label={g.source_label} /></td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    )}
+    <p><a class="more" href="/ja/gear/">4人の機材を比較する</a></p>
+  </section>
+
+  <AdSlot />
+
+  <section class="section">
+    <h2 class="h2">おすすめ曲・公式動画</h2>
+    {sg.length === 0 ? <p class="muted">準備中です。公式YouTubeから選んで追加します。</p> : (
+      <div class="video-grid">
+        {sg.map((s) => (
+          <figure class="video">
+            {s.youtube_id && (
+              <iframe src={`https://www.youtube-nocookie.com/embed/${s.youtube_id}`} title={s.title} loading="lazy" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            )}
+            <figcaption>{s.title}{s.year && `（${s.year}）`} {s.note_ja} <SourceLink url={s.source_url} label={s.source_label} /> <DraftBadge row={s} /></figcaption>
+          </figure>
+        ))}
+      </div>
+    )}
+  </section>
+
+  <section class="section">
+    <h2 class="h2">来日情報</h2>
+    {jp.length === 0 ? <p class="muted">調査中です。</p> : (
+      <ul class="plain-list">
+        {jp.map((j) => (
+          <li><time>{j.date}</time> {j.event_ja}（{j.place_ja}） <SourceLink url={j.source_url} label={j.source_label} /> <DraftBadge row={j} /></li>
+        ))}
+      </ul>
+    )}
+  </section>
+
+  <section class="section">
+    <h2 class="h2">公式SNS・リンク</h2>
+    <ul class="sns-list">
+      {sns.map(([label, url]) => <li><a href={url} target="_blank" rel="noopener noreferrer">{label}</a></li>)}
+    </ul>
+  </section>
+
+  <EditorNote text={a.editor_note_ja} />
+
+  {a.id === 'nita-strauss' && (
+    <p class="callout"><a href="/ja/nita-street-team/">ニタ・ストラウス 日本ストリートチームの紹介はこちら</a></p>
+  )}
+
+  <AdSlot />
+</Base>

@@ -1,0 +1,80 @@
+---
+import Base from '../../layouts/Base.astro';
+import AdSlot from '../../components/AdSlot.astro';
+import { artists } from '../../lib/data';
+import { QUESTIONS } from '../../lib/quiz';
+import { SITE } from '../../lib/site';
+const results = Object.fromEntries(artists.map((a) => [a.id, {
+  name: a.name_ja, en: a.name_en, band: a.current_band, color: a.color, lead: a.points_ja.split('|')[0] ?? '',
+}]));
+---
+<Base title="あなたに合う女性ギタリスト診断" description="8つの質問に答えるだけ。ニタ・ストラウス、コートニー・コックス、ブリット・ライトニング、アンナ・カーラの中から、あなたに合うギタリストを診断します。">
+  <h1 class="h1">あなたに合う女性ギタリスト診断</h1>
+  <p>8つの質問に直感で答えてください。4人の中から、あなたにぴったりのギタリストをカードで表示します。</p>
+
+  <form id="quiz" class="quiz">
+    {QUESTIONS.map((q, i) => (
+      <fieldset class="quiz-q">
+        <legend><span class="quiz-no">Q{i + 1}</span>{q.q}</legend>
+        {q.choices.map((c, j) => (
+          <label class="quiz-choice">
+            <input type="radio" name={`q${i}`} value={j} required />
+            <span>{c.label}</span>
+          </label>
+        ))}
+      </fieldset>
+    ))}
+    <button class="btn" type="submit">結果を見る</button>
+  </form>
+
+  <section id="result" class="quiz-result" hidden aria-live="polite">
+    <p class="kicker">あなたに合うのは…</p>
+    <div class="tcard tcard-large result-card">
+      <div class="tcard-frame">
+        <div class="tcard-art"><div class="tcard-placeholder"><span id="r-initials"></span></div></div>
+        <div class="tcard-name"><p class="tcard-ja" id="r-name"></p><p class="tcard-en" id="r-en"></p></div>
+        <dl class="tcard-stats"><div><dt>バンド</dt><dd id="r-band"></dd></div></dl>
+      </div>
+    </div>
+    <p id="r-lead" class="result-lead"></p>
+    <p class="result-actions">
+      <a id="r-link" class="btn" href="#">プロフィールを見る</a>
+      <a id="r-share" class="btn btn-ghost" target="_blank" rel="noopener noreferrer" href="#">Xでシェア</a>
+      <button id="r-retry" class="btn btn-ghost" type="button">もう一度</button>
+    </p>
+    <AdSlot />
+  </section>
+
+  <script is:inline define:vars={{ QUESTIONS, results, siteUrl: SITE.url }}>
+    const form = document.getElementById('quiz');
+    const out = document.getElementById('result');
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const score = {};
+      QUESTIONS.forEach((q, i) => {
+        const v = form.querySelector(`input[name="q${i}"]:checked`);
+        if (!v) return;
+        for (const [id, p] of Object.entries(q.choices[Number(v.value)].points)) score[id] = (score[id] || 0) + p;
+      });
+      const ids = Object.keys(results);
+      if (ids.length === 0) return;
+      const best = ids.sort((a, b) => (score[b] || 0) - (score[a] || 0))[0];
+      const r = results[best];
+      document.getElementById('r-initials').textContent = r.en.split(' ').map((w) => w[0]).join('');
+      document.getElementById('r-name').textContent = r.name;
+      document.getElementById('r-en').textContent = r.en;
+      document.getElementById('r-band').textContent = r.band;
+      document.getElementById('r-lead').textContent = r.lead;
+      out.querySelector('.result-card').style.setProperty('--card', r.color || '#ff2bd6');
+      document.getElementById('r-link').href = `/ja/artists/${best}/`;
+      const text = `私に合う女性ギタリストは「${r.name}（${r.en}）」でした！ #SHREDQUEENS診断`;
+      document.getElementById('r-share').href = `https://x.com/intent/post?text=${encodeURIComponent(text)}&url=${encodeURIComponent(siteUrl + '/ja/quiz/')}`;
+      form.hidden = true;
+      out.hidden = false;
+      out.scrollIntoView({ behavior: 'smooth' });
+    });
+    document.getElementById('r-retry').addEventListener('click', () => {
+      form.reset(); out.hidden = true; form.hidden = false; form.scrollIntoView({ behavior: 'smooth' });
+    });
+  </script>
+</Base>

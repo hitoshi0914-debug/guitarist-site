@@ -1,0 +1,11 @@
+---
+interface Props { text?: string; }
+const { text } = Astro.props;
+---
+{text && (
+  <aside class="editor-note">
+    <p class="editor-note-title">編集部より</p>
+    <p>{text}</p>
+    <p class="editor-note-foot">※ここはファンとしての感想です。事実の情報とは分けて書いています。</p>
+  </aside>
+)}

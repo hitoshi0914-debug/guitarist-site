@@ -1,0 +1,12 @@
+---
+import Base from '../../layouts/Base.astro';
+// お問い合わせフォームのURL（Googleフォームなど）。決まったらここに入れる
+const FORM_URL = '';
+---
+<Base title="お問い合わせ" noAds>
+  <h1 class="h1">お問い合わせ</h1>
+  <p>掲載内容の誤り、権利に関するご連絡、ストリートチームへの参加希望などはこちらからお寄せください。</p>
+  {FORM_URL
+    ? <p><a class="btn" href={FORM_URL} target="_blank" rel="noopener noreferrer">お問い合わせフォームを開く</a></p>
+    : <p class="muted">お問い合わせフォームは準備中です。</p>}
+</Base>

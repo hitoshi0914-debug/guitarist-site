@@ -1,0 +1,19 @@
+---
+import Base from '../../layouts/Base.astro';
+import DraftBadge from '../../components/DraftBadge.astro';
+import AdSlot from '../../components/AdSlot.astro';
+import { glossary } from '../../lib/data';
+---
+<Base title="機材用語集" description="ハムバッカー、フロイドローズ、シグネチャーモデルなど、ギター機材の用語をやさしく解説します。">
+  <h1 class="h1">機材用語集</h1>
+  <p>機材比較や各ギタリストのページに出てくる用語を、五十音順にまとめました。</p>
+  <dl class="glossary">
+    {glossary.map((t) => (
+      <div class="term" id={t.term_en.toLowerCase().replace(/[^a-z0-9]+/g, '-')}>
+        <dt>{t.term_ja} <span class="term-en">{t.term_en}</span> <DraftBadge row={t} /></dt>
+        <dd>{t.desc_ja}</dd>
+      </div>
+    ))}
+  </dl>
+  <AdSlot />
+</Base>
