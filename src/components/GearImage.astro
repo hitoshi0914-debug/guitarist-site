@@ -14,7 +14,6 @@ const kind = row.illust || (row.category === 'guitar' ? 'superstrat' : row.categ
     <figcaption>
       写真: {row.image_source_url ? <a href={row.image_source_url} target="_blank" rel="noopener">{row.image_credit || '出典'}</a> : row.image_credit}
       {row.image_license && <> ／ {row.image_license}</>}
-      {row.image_note && <><br />{row.image_note}</>}
     </figcaption>
   </figure>
 ) : (

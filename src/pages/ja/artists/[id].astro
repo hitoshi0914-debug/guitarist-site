@@ -79,7 +79,8 @@ const sns = [
             <GearImage row={g} color={a.color || undefined} size="sm" />
             <div>
               <span class="muted">{GEAR_CATEGORIES[g.category] ?? g.category}</span>
-              <div>{g.maker_url ? <a class="gear-name" href={g.maker_url} target="_blank" rel="noopener"><strong>{g.maker}</strong> {g.item}</a> : <><strong>{g.maker}</strong> {g.item}</>} <DraftBadge row={g} /></div>
+              <div>{g.maker_url ? <a class="gear-name" href={g.maker_url} target="_blank" rel="noopener"><strong>{g.maker}</strong> {g.item}</a> : <><strong>{g.maker}</strong> {g.item}</>}
+{g.image_note && <div class="muted small">※{g.image_note}</div>} <DraftBadge row={g} /></div>
               <p class="gear-note">{g.note_ja}</p>
               <SourceLink url={g.source_url} label={g.source_label} />
             </div>
