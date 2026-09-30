@@ -45,7 +45,7 @@ const cats = Object.entries(GEAR_CATEGORIES);
                     <div class="gear-item">
                       <GearImage row={g} color={a.color || undefined} size="sm" />
                       <div>
-                        <strong>{g.maker}</strong> {g.item}
+                        {g.maker_url ? <a class="gear-name" href={g.maker_url} target="_blank" rel="noopener"><strong>{g.maker}</strong> {g.item}</a> : <><strong>{g.maker}</strong> {g.item}</>}
                         <div class="gear-meta"><SourceLink url={g.source_url} label={g.source_label} /><DraftBadge row={g} /></div>
                       </div>
                     </div>

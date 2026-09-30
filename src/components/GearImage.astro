@@ -5,11 +5,12 @@ import type { Gear } from '../lib/data';
 interface Props { row: Gear; color?: string; size?: 'sm' | 'md' }
 const { row, color = 'var(--accent)', size = 'md' } = Astro.props;
 const alt = `${row.maker} ${row.item}`;
+const link = row.maker_url || '';
 const kind = row.illust || (row.category === 'guitar' ? 'superstrat' : row.category === 'amp' ? 'amp-head' : 'pedal');
 ---
 {row.image_url ? (
   <figure class={`gear-img gear-img--${size}`}>
-    <img src={row.image_url} alt={alt} loading="lazy" decoding="async" />
+    <a href={link || undefined} target="_blank" rel="noopener" title={`${row.maker} 公式サイトへ`}><img src={row.image_url} alt={alt} loading="lazy" decoding="async" /></a>
     <figcaption>
       写真: {row.image_source_url ? <a href={row.image_source_url} target="_blank" rel="noopener">{row.image_credit || '出典'}</a> : row.image_credit}
       {row.image_license && <> ／ {row.image_license}</>}
@@ -17,6 +18,7 @@ const kind = row.illust || (row.category === 'guitar' ? 'superstrat' : row.categ
   </figure>
 ) : (
   <figure class={`gear-img gear-img--${size} gear-img--illust`} style={`--gear:${color}`}>
+    <a href={link || undefined} target="_blank" rel="noopener" title={`${row.maker} 公式サイトへ`}>
     <svg viewBox="0 0 120 120" role="img" aria-label={`${alt}（イメージイラスト）`}>
       {kind === 'superstrat' && (
         <g>
@@ -85,6 +87,7 @@ const kind = row.illust || (row.category === 'guitar' ? 'superstrat' : row.categ
         </g>
       )}
     </svg>
+    </a>
     <figcaption>イメージ図</figcaption>
   </figure>
 )}
