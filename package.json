@@ -1,0 +1,21 @@
+{
+  "name": "shred-queens",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "build": "node scripts/sync-sheets.mjs && astro build",
+    "preview": "astro preview",
+    "sync:sheets": "node scripts/sync-sheets.mjs"
+  },
+  "dependencies": {
+    "astro": "^7.3.5",
+    "csv-parse": "^7.0.3"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "@types/node": "^26.6.3",
+    "typescript": "^6.0.3"
+  }
+}

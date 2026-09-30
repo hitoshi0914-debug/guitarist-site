@@ -1,0 +1,19 @@
+---
+import Base from '../../layouts/Base.astro';
+import DraftBadge from '../../components/DraftBadge.astro';
+import { news } from '../../lib/data';
+---
+<Base title="更新情報" description="SHRED QUEENSの更新情報。来日・新譜・サイトの更新をお知らせします。">
+  <h1 class="h1">更新情報</h1>
+  {news.length === 0 ? <p class="muted">まだありません。</p> : (
+    <ul class="news-full">
+      {news.map((n) => (
+        <li>
+          <time>{n.date.replaceAll('-', '/')}</time>
+          <h2 class="h3">{n.link ? <a href={n.link}>{n.title_ja}</a> : n.title_ja} <DraftBadge row={n} /></h2>
+          <p>{n.body_ja}</p>
+        </li>
+      ))}
+    </ul>
+  )}
+</Base>

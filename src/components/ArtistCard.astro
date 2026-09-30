@@ -1,0 +1,36 @@
+---
+// トレカ風カード
+import type { Artist } from '../lib/data';
+import DraftBadge from './DraftBadge.astro';
+interface Props { artist: Artist; size?: 'large' | 'normal'; link?: boolean; }
+const { artist: a, size = 'normal', link = true } = Astro.props;
+const Tag = link ? 'a' : 'div';
+const initials = a.name_en.split(' ').map((w) => w[0]).join('');
+---
+<Tag class={`tcard tcard-${size}`} href={link ? `/ja/artists/${a.id}/` : undefined} style={`--card:${a.color || '#ff2bd6'}`}>
+  <div class="tcard-frame">
+    <div class="tcard-top">
+      <span class="tcard-no">No.{String(a.order).padStart(3, '0')}</span>
+      <DraftBadge row={a} />
+    </div>
+    <div class="tcard-art">
+      {a.photo_url ? (
+        <img src={a.photo_url} alt={`${a.name_ja}（${a.name_en}）`} loading="lazy" />
+      ) : (
+        <div class="tcard-placeholder" aria-hidden="true">
+          <span>{initials}</span>
+        </div>
+      )}
+    </div>
+    <div class="tcard-name">
+      <p class="tcard-ja">{a.name_ja}</p>
+      <p class="tcard-en">{a.name_en}{a.nickname && <span> / {a.nickname}</span>}</p>
+    </div>
+    <dl class="tcard-stats">
+      <div><dt>国</dt><dd>{a.country || '—'}</dd></div>
+      <div><dt>バンド</dt><dd>{a.current_band || '—'}</dd></div>
+      <div><dt>ギター</dt><dd>{a.main_guitar || '調査中'}</dd></div>
+    </dl>
+    {a.photo_credit && <p class="tcard-credit">Photo: {a.photo_credit}{a.photo_license && ` (${a.photo_license})`}</p>}
+  </div>
+</Tag>

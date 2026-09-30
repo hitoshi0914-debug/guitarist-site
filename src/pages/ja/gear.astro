@@ -1,0 +1,59 @@
+---
+import Base from '../../layouts/Base.astro';
+import TrustBar from '../../components/TrustBar.astro';
+import SourceLink from '../../components/SourceLink.astro';
+import DraftBadge from '../../components/DraftBadge.astro';
+import AdSlot from '../../components/AdSlot.astro';
+import { artists, gear, GEAR_CATEGORIES, latestCheck } from '../../lib/data';
+const cats = Object.entries(GEAR_CATEGORIES);
+---
+<Base title="機材比較" description="ニタ・ストラウス、コートニー・コックス、ブリット・ライトニング、アンナ・カーラの使用機材（ギター・アンプ・エフェクター）を出典つきで比較。">
+  <h1 class="h1">機材比較</h1>
+  <TrustBar checkedOn={latestCheck(gear)} />
+  <p>4人の使用機材を種類ごとに横並びで比べられます。各機材には出典と「公式」「インタビュー」のラベルを付けています。用語がわからないときは<a href="/ja/glossary/">機材用語集</a>へ。</p>
+
+  <div class="filter" role="group" aria-label="種類で絞り込み">
+    <button type="button" class="chip" data-filter="all" aria-pressed="true">すべて</button>
+    {cats.map(([key, label]) => <button type="button" class="chip" data-filter={key} aria-pressed="false">{label}</button>)}
+  </div>
+
+  <div class="table-scroll">
+    <table class="table compare">
+      <thead>
+        <tr><th>種類</th>{artists.map((a) => <th><a href={`/ja/artists/${a.id}/`}>{a.name_ja}</a></th>)}</tr>
+      </thead>
+      <tbody>
+        {cats.map(([key, label]) => (
+          <tr data-cat={key}>
+            <th scope="row">{label}</th>
+            {artists.map((a) => {
+              const items = gear.filter((g) => g.artist_id === a.id && g.category === key);
+              return (
+                <td>
+                  {items.length === 0 ? <span class="muted">調査中</span> : items.map((g) => (
+                    <div class="gear-item">
+                      <strong>{g.maker}</strong> {g.item}
+                      <div class="gear-meta"><SourceLink url={g.source_url} label={g.source_label} /><DraftBadge row={g} /></div>
+                    </div>
+                  ))}
+                </td>
+              );
+            })}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+
+  <AdSlot />
+
+  <script>
+    const chips = document.querySelectorAll<HTMLButtonElement>('.chip');
+    const rows = document.querySelectorAll<HTMLTableRowElement>('tr[data-cat]');
+    chips.forEach((chip) => chip.addEventListener('click', () => {
+      const f = chip.dataset.filter;
+      chips.forEach((c) => c.setAttribute('aria-pressed', String(c === chip)));
+      rows.forEach((r) => { r.hidden = f !== 'all' && r.dataset.cat !== f; });
+    }));
+  </script>
+</Base>

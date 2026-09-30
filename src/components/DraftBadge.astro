@@ -1,0 +1,6 @@
+---
+import { isDraft } from '../lib/data';
+interface Props { row: { status?: string } }
+const { row } = Astro.props;
+---
+{isDraft(row as any) && <span class="draft-badge" title="AIの下書きです。本人確認がすむと公開されます">確認待ち</span>}

@@ -1,0 +1,50 @@
+---
+import Base from '../../layouts/Base.astro';
+import ArtistCard from '../../components/ArtistCard.astro';
+import AdSlot from '../../components/AdSlot.astro';
+import DraftBadge from '../../components/DraftBadge.astro';
+import { artists, news } from '../../lib/data';
+const featured = artists.filter((a) => a.featured === '1');
+const others = artists.filter((a) => a.featured !== '1');
+---
+<Base hasEnglish={false}>
+  <section class="hero">
+    <p class="hero-kicker">海外の女性ギタリスト図鑑</p>
+    <h1 class="hero-title">SHRED<br />QUEENS</h1>
+    <p class="hero-lead">世界のステージで弾きまくる4人を、経歴・機材・来日情報まで出典つきで深掘りします。</p>
+  </section>
+
+  {artists.length === 0 ? (
+    <p class="empty">ただいま準備中です。</p>
+  ) : (
+    <section class="card-grid" aria-label="ギタリスト一覧">
+      {featured.map((a) => (
+        <div class="card-featured">
+          <p class="featured-label">推し枠</p>
+          <ArtistCard artist={a} size="large" />
+        </div>
+      ))}
+      {others.map((a) => <ArtistCard artist={a} />)}
+    </section>
+  )}
+
+  <AdSlot />
+
+  <section class="entry-grid" aria-label="コンテンツ">
+    <a class="entry" href="/ja/gear/"><span class="entry-title">機材比較</span><span>4人のギター・アンプ・エフェクターを横並びで</span></a>
+    <a class="entry" href="/ja/quiz/"><span class="entry-title">診断</span><span>あなたに合う女性ギタリストは？</span></a>
+    <a class="entry" href="/ja/nita-street-team/"><span class="entry-title">ストリートチーム</span><span>ニタ・ストラウス 日本ストリートチーム</span></a>
+  </section>
+
+  <section class="section">
+    <h2 class="h2">更新情報</h2>
+    {news.length === 0 ? <p class="muted">まだありません。</p> : (
+      <ul class="news-list">
+        {news.slice(0, 3).map((n) => (
+          <li><time>{n.date.replaceAll('-', '/')}</time> {n.title_ja} <DraftBadge row={n} /></li>
+        ))}
+      </ul>
+    )}
+    <p><a class="more" href="/ja/news/">更新情報をすべて見る</a></p>
+  </section>
+</Base>

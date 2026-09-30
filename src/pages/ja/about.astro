@@ -1,0 +1,28 @@
+---
+import Base from '../../layouts/Base.astro';
+import { SITE } from '../../lib/site';
+---
+<Base title="運営者情報" noAds>
+  <h1 class="h1">運営者情報</h1>
+  <table class="table info">
+    <tbody>
+      <tr><th>サイト名</th><td>{SITE.name}（{SITE.tagline}）</td></tr>
+      <tr><th>URL</th><td>{SITE.url}/</td></tr>
+      <tr><th>運営者</th><td>SHRED QUEENS 編集部（ニタ・ストラウス 日本ストリートチーム運営者）</td></tr>
+      <tr><th>お問い合わせ</th><td><a href="/ja/contact/">お問い合わせページ</a>から</td></tr>
+    </tbody>
+  </table>
+  <section class="section">
+    <h2 class="h2">このサイトについて</h2>
+    <p>海外で活躍する女性ギタリストを、日本のファンに向けて紹介する非公式のファンサイトです。紹介するのは4人に絞り、経歴・機材・来日情報を深く掘り下げます。</p>
+    <h2 class="h2">情報の載せ方</h2>
+    <ul class="plain-list">
+      <li>本人・バンド・メーカーの公式発表で確認できた情報だけを載せます（ラベル「公式」）。</li>
+      <li>雑誌などのインタビューで本人が語った内容は、ラベル「インタビュー」を付けて載せます。</li>
+      <li>各ページに確認日と出典リンクを付けています。</li>
+      <li>文章はAIが下書きし、運営者が出典を確認してから公開しています。</li>
+      <li>「編集部より」の欄はファンとしての感想で、事実の情報とは分けています。</li>
+      <li>写真はWikimedia Commonsのクリエイティブ・コモンズ写真（クレジット付き）と、公式の埋め込みだけを使います。</li>
+    </ul>
+  </section>
+</Base>
