@@ -1,0 +1,191 @@
+---
+import Base from '../../layouts/Base.astro';
+import TrustBar from '../../components/TrustBar.astro';
+import SourceLink from '../../components/SourceLink.astro';
+import DraftBadge from '../../components/DraftBadge.astro';
+import AdSlot from '../../components/AdSlot.astro';
+import SectionTitle from '../../components/SectionTitle.astro';
+import ShopImage from '../../components/ShopImage.astro';
+import Icon from '../../components/Icon.astro';
+import { artists, shopItems, latestCheck } from '../../lib/data';
+
+// 本番では approved の行が1つもないうちは「準備中」として検索に出さない
+const ready = shopItems.length > 0;
+// アフィリエイトリンクが1つでもあればページ上部に「PR」表記を出す（ステマ規制）
+const hasAffiliate = shopItems.some((r) => r.affiliate_url);
+const groups = artists
+  .map((a) => ({ artist: a, items: shopItems.filter((r) => r.artist_id === a.id) }));
+
+// 関税・消費税の計算例（1ドル=150円で計算した目安）
+const RATE = 150;
+const examplePriceUsd = 4179;
+const exampleYen = examplePriceUsd * RATE;
+const exampleTaxable = Math.round(exampleYen * 0.6);
+const exampleTax = Math.round(exampleTaxable * 0.1);
+const yen = (n: number) => n.toLocaleString('ja-JP');
+
+// 購入の流れ（アイコン付きの5ステップ）
+const FLOW = [
+  { icon: 'search', title: '商品を選ぶ', text: '上の一覧から販売ページを開く' },
+  { icon: 'cart', title: 'カートに入れる', text: '配送先の国で「Japan」を選べるか確認' },
+  { icon: 'card', title: '支払う', text: 'クレジットカードかPayPal。外貨で払う' },
+  { icon: 'truck', title: '発送を待つ', text: 'メールで届く追跡番号で配送状況を確認' },
+  { icon: 'box', title: '受け取る', text: '必要なら消費税を配達員に払う（関税込み配送なら不要）' },
+];
+
+// 買い方4通り（かんたんな順）
+const WAYS = [
+  { icon: 'store', title: '公式ストアで買う', tag: 'かんたん', level: 'easy', text: '本人やメーカーの公式ストアから直接買います。いちばん確実です。' },
+  { icon: 'globe', title: '海外の楽器店で買う', tag: 'かんたん', level: 'easy', text: '日本へ発送してくれる店を選びます。配送先で日本を選べればOKです。' },
+  { icon: 'repeat', title: 'Reverbで買う', tag: 'ふつう', level: 'mid', text: '楽器専門のマーケットです。新品も中古もあり、出品ごとに発送条件と送料が違います。出品者の評価も確認しましょう。' },
+  { icon: 'plane', title: '転送サービスを使う', tag: '上級', level: 'hard', text: '日本に発送しない店で買うときに、海外の住所を借りて日本へ送り直してもらいます。手数料と送料が別にかかります。' },
+];
+---
+<Base
+  title="シグネチャー品の個人輸入ガイド"
+  description="ニタ・ストラウス、コートニー・コックス、ブリット・ライトニングのシグネチャーギター・ピック・ワウを日本から買う方法。販売先、日本への発送、関税・消費税のめやすを出典つきでまとめます。"
+  noindex={!ready}
+>
+  <h1 class="h1">シグネチャー品の個人輸入ガイド</h1>
+  {hasAffiliate && <p class="pr-note"><span class="pr-label">PR</span>このページには広告（アフィリエイトリンク）が含まれます。リンクから購入されると、当サイトに紹介料が入ることがあります。</p>}
+  <TrustBar checkedOn={latestCheck(shopItems)} />
+
+  {!ready ? (
+    <p>このページは準備中です。</p>
+  ) : (
+    <>
+      <p>海外の女性ギタリストのシグネチャーモデルやピックは、日本の楽器店ではほとんど扱いがありません。このページでは「どこで買えるか」「日本に送ってもらえるか」「税金はいくらかかるか」を、公式サイトの情報をもとにまとめました。価格や発送条件は変わることがあるので、購入前に必ず販売ページで確認してください。</p>
+
+      <section class="section">
+        <SectionTitle icon="guitar" en="WHERE TO BUY">どこで買える？</SectionTitle>
+        {groups.map(({ artist, items }) => (
+          <div class="shop-group">
+            <h3 class="h3"><a href={`/ja/artists/${artist.id}/`}>{artist.name_ja}</a></h3>
+            {items.length === 0 ? (
+              <p class="muted">シグネチャー品の発売は確認できていません（{latestCheck(shopItems).replaceAll('-', '/') || '確認待ち'}時点）。</p>
+            ) : (
+              <div class="shop-grid">
+                {items.map((r) => (
+                  <article class="shop-card">
+                    <ShopImage row={r} color={artist.color} />
+                    <div class="shop-body">
+                      <p class="shop-name">{r.item} <DraftBadge row={r} /></p>
+                      <dl class="shop-facts">
+                        <div><dt><Icon name="yen" size={14} />価格</dt><dd>{r.price_note}</dd></div>
+                        <div><dt><Icon name="truck" size={14} />日本へ</dt><dd>{r.ships_ja}</dd></div>
+                      </dl>
+                      <p class="muted shop-note">{r.note_ja} <SourceLink url={r.source_url} label={r.source_label} /></p>
+                      <a class="shop-btn" href={r.affiliate_url || r.shop_url} target="_blank" rel={r.affiliate_url ? 'sponsored noopener' : 'noopener noreferrer'}>
+                        {r.affiliate_url && <span class="pr-label">PR</span>}{r.shop_name}で見る<Icon name="external" size={14} />
+                      </a>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            )}
+          </div>
+        ))}
+      </section>
+
+      <section class="section">
+        <SectionTitle icon="cart" en="HOW IT WORKS">購入の流れ</SectionTitle>
+        <p>公式ストアや海外の楽器店で買うときは、だいたいこの5ステップです。</p>
+        <ol class="flow">
+          {FLOW.map((f, i) => (
+            <li class="flow-step">
+              <span class="flow-icon"><Icon name={f.icon} size={28} /></span>
+              <span class="flow-num">STEP {i + 1}</span>
+              <strong class="flow-title">{f.title}</strong>
+              <span class="flow-text">{f.text}</span>
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      <section class="section">
+        <SectionTitle icon="plane" en="4 WAYS">買い方は4通り</SectionTitle>
+        <div class="ways">
+          {WAYS.map((w) => (
+            <div class="way">
+              <span class="way-icon"><Icon name={w.icon} size={26} /></span>
+              <div>
+                <p class="way-title">{w.title}<span class={`way-tag way-tag--${w.level}`}>{w.tag}</span></p>
+                <p class="way-text">{w.text}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section class="section">
+        <SectionTitle icon="check" en="TAX">関税・消費税のめやす</SectionTitle>
+        <ul>
+          <li><strong>楽器は関税がかかりません</strong>：ギターなどの弦楽器（関税率表の92類）は関税が無税です。CD・Blu-ray・書籍も無税です。<SourceLink url="https://www.customs.go.jp/tetsuzuki/c-answer/imtsukan/1204_jr.htm" label="公式" /></li>
+          <li><strong>消費税はかかります</strong>：自分で使うために買う場合、税金の計算に使う金額（課税価格）は「海外での販売価格 × 0.6」です。<SourceLink url="https://www.customs.go.jp/tetsuzuki/c-answer/imtsukan/1405_jr.htm" label="公式" /></li>
+          <li><strong>課税価格の合計が1万円以下なら免税</strong>：ピックやTシャツなど少額の買い物は、多くの場合税金がかかりません（一部の品目は対象外）。<SourceLink url="https://www.customs.go.jp/tetsuzuki/c-answer/imtsukan/1006_jr.htm" label="公式" /></li>
+        </ul>
+        <div class="calc">
+          <p class="calc-title">計算例：{yen(examplePriceUsd)}ドルのギターを買った場合（1ドル={RATE}円で計算）</p>
+          <p>販売価格 {yen(exampleYen)}円 × 0.6 ＝ 課税価格 {yen(exampleTaxable)}円<br />消費税（10%）＝ 約{yen(exampleTax)}円 ＋ 配送業者の立替手数料</p>
+          <p class="muted">「関税込み配送（DDP）」と書かれている店は、この税金を購入時にまとめて払う方式です。到着時に追加で払う必要は基本的にありません。実際の税額は税関が決めるため、ここでの金額は目安です。</p>
+        </div>
+      </section>
+
+      <section class="section">
+        <SectionTitle icon="bell" en="CHECK">買う前にチェック</SectionTitle>
+        <ul>
+          <li><strong>電源</strong>：ワウなどのペダルは日本で売っている9Vアダプターが使えるか確認します。アンプは海外仕様（120Vや230V）だと日本の100Vでは変圧器が必要です。</li>
+          <li><strong>保証・修理</strong>：海外で買った製品は、日本の代理店の保証対象外になることがあります。</li>
+          <li><strong>返品</strong>：海外への返品は送料が高くつきます。サイズや仕様は購入前によく確認しましょう。</li>
+          <li><strong>偽物・転売</strong>：本人のサイン入りやステージ使用品は、公式ストアから買うのが安心です。</li>
+        </ul>
+      </section>
+    </>
+  )}
+  <AdSlot />
+</Base>
+
+<style>
+  .pr-note { font-size: 13px; color: var(--muted); border: 1px solid var(--line); border-radius: 8px; padding: 8px 12px; }
+  .pr-label { display: inline-block; font-size: 11px; font-weight: 700; color: #0b0b0f; background: var(--accent); border-radius: 4px; padding: 0 6px; margin: 0 6px 0 0; }
+  .shop-group { margin-bottom: 28px; }
+  .section ul li { margin-bottom: 8px; }
+  .shop-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
+  .shop-card { display: flex; flex-direction: column; background: #121218; border: 1px solid var(--line); border-radius: 12px; padding: 12px; }
+  .shop-body { display: flex; flex-direction: column; gap: 8px; flex: 1; margin-top: 10px; }
+  .shop-name { font-weight: 700; margin: 0; }
+  .shop-facts { margin: 0; display: grid; gap: 4px; font-size: 13px; }
+  .shop-facts div { display: grid; grid-template-columns: 72px 1fr; gap: 6px; }
+  .shop-facts dt { color: var(--accent); display: flex; align-items: center; gap: 4px; }
+  .shop-facts dd { margin: 0; }
+  .shop-note { font-size: 12px; margin: 0; }
+  .shop-btn { margin-top: auto; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 10px 12px; border-radius: 8px; background: var(--accent); color: #0b0b0f; font-weight: 700; text-decoration: none; font-size: 14px; text-align: center; }
+  .shop-btn .pr-label { background: #0b0b0f; color: var(--accent); }
+  .flow { list-style: none; padding: 0; margin: 16px 0 0; display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; counter-reset: none; }
+  .flow-step { position: relative; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 4px; background: #121218; border: 1px solid var(--line); border-radius: 12px; padding: 16px 10px; }
+  .flow-step:not(:last-child)::after { content: '▶'; position: absolute; right: -11px; top: 38px; color: var(--accent); font-size: 12px; }
+  .flow-icon { display: grid; place-items: center; width: 56px; height: 56px; border-radius: 50%; background: var(--accent); color: #0b0b0f; }
+  .flow-num { font-size: 11px; letter-spacing: 0.1em; color: var(--accent); font-weight: 700; }
+  .flow-title { font-size: 15px; }
+  .flow-text { font-size: 12px; color: var(--muted); }
+  .ways { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
+  .way { display: flex; gap: 12px; align-items: flex-start; background: #121218; border: 1px solid var(--line); border-radius: 12px; padding: 14px; }
+  .way-icon { flex: none; display: grid; place-items: center; width: 48px; height: 48px; border-radius: 12px; border: 2px solid var(--accent); color: var(--accent); }
+  .way-title { font-weight: 700; margin: 0 0 4px; }
+  .way-text { font-size: 13px; margin: 0; color: var(--muted); }
+  .way-tag { font-size: 11px; font-weight: 700; border-radius: 999px; padding: 1px 8px; margin-left: 8px; vertical-align: middle; }
+  .way-tag--easy { background: #1f3d2a; color: #7ee2a0; }
+  .way-tag--mid { background: #3d351f; color: #f3d27a; }
+  .way-tag--hard { background: #3d1f2c; color: #ff8fb8; }
+  @media (max-width: 760px) {
+    .flow { grid-template-columns: 1fr; }
+    .flow-step { flex-direction: row; text-align: left; flex-wrap: wrap; column-gap: 12px; padding: 12px; }
+    .flow-step .flow-icon { width: 44px; height: 44px; }
+    .flow-step:not(:last-child)::after { content: '▼'; right: auto; left: 30px; top: auto; bottom: -15px; }
+    .flow-num, .flow-title, .flow-text { flex-basis: calc(100% - 60px); }
+    .flow-step { display: grid; grid-template-columns: 44px 1fr; align-items: center; }
+    .flow-icon { grid-row: span 3; }
+  }
+  .calc { border-left: 4px solid var(--accent); background: rgba(255, 255, 255, 0.04); padding: 12px 16px; margin-top: 16px; }
+  .calc-title { font-weight: 700; margin: 0 0 6px; }
+</style>

@@ -13,6 +13,7 @@
 | japan.csv | 来日情報 |
 | glossary.csv | 機材用語集 |
 | news.csv | 更新情報 |
+| shop_items.csv | 個人輸入ガイドの「どこで買えるか」一覧。`affiliate_url` を入れるとそのリンクを使い、ページに「PR」表記が出る（スプレッドシート取り込みの対象外。CSVを直接編集） |
 
 ## 共通の列
 - `status` … `draft`（AIの下書き・確認待ち）／`approved`（本人確認済み＝公開）
