@@ -11,10 +11,12 @@ interface Props {
   /** 英語版ができたら同じパスの /en/ を hreflang で出す */
   hasEnglish?: boolean;
   noAds?: boolean;
+  /** 検索に出さない（公開準備中のページなど） */
+  noindex?: boolean;
   /** SNSシェア時のサムネイル画像（public からのパス、1200x630）。未指定はサイト共通画像 */
   ogImage?: string;
 }
-const { title, description = `${SITE.tagline}。ニタ・ストラウスほか4人の経歴・機材・来日情報を、出典つきでまとめます。`, hasEnglish = false, noAds = false, ogImage = '/images/og/og-default.png' } = Astro.props;
+const { title, description = `${SITE.tagline}。ニタ・ストラウスほか4人の経歴・機材・来日情報を、出典つきでまとめます。`, hasEnglish = false, noAds = false, noindex = false, ogImage = '/images/og/og-default.png' } = Astro.props;
 const ogImageUrl = new URL(ogImage, SITE.url).href;
 const fullTitle = title ? `${title} | ${SITE.name}` : `${SITE.name} | ${SITE.tagline}`;
 const canonical = new URL(Astro.url.pathname, SITE.url).href;
@@ -27,7 +29,7 @@ const enPath = Astro.url.pathname.replace(/^\/ja\//, '/en/');
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
-    {SHOW_DRAFTS && <meta name="robots" content="noindex, nofollow" />}
+    {(SHOW_DRAFTS || noindex) && <meta name="robots" content="noindex, nofollow" />}
     <link rel="canonical" href={canonical} />
     <link rel="alternate" hreflang="ja" href={canonical} />
     {hasEnglish && <link rel="alternate" hreflang="en" href={new URL(enPath, SITE.url).href} />}

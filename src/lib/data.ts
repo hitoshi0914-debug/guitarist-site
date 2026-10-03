@@ -41,6 +41,7 @@ export type GearVideo = Row & { artist_id: string; youtube_id: string; title_ja:
 export type Song = Row & { artist_id: string; title: string; credit: string; year: string; youtube_id: string; note_ja: string; source_url: string; source_label: string; checked_on: string };
 export type JapanVisit = Row & { artist_id: string; date: string; event_ja: string; place_ja: string; source_url: string; source_label: string; checked_on: string };
 export type Term = Row & { term_ja: string; reading: string; term_en: string; desc_ja: string };
+export type ShopItem = Row & { artist_id: string; item: string; kind: string; shop_name: string; shop_url: string; affiliate_url: string; price_note: string; ships_ja: string; note_ja: string; source_url: string; source_label: string; checked_on: string };
 export type News = Row & { date: string; title_ja: string; body_ja: string; link: string };
 
 export const artists = load<Artist>('artists').sort((a, b) => Number(a.order) - Number(b.order));
@@ -50,6 +51,7 @@ export const gearVideos = load<GearVideo>('gear_videos');
 export const songs = load<Song>('songs');
 export const japan = load<JapanVisit>('japan').sort((a, b) => b.date.localeCompare(a.date));
 export const glossary = load<Term>('glossary').sort((a, b) => a.reading.localeCompare(b.reading, 'ja'));
+export const shopItems = load<ShopItem>('shop_items');
 export const news = load<News>('news').sort((a, b) => b.date.localeCompare(a.date));
 
 export const GEAR_CATEGORIES: Record<string, string> = {
