@@ -5,6 +5,8 @@ import SourceLink from '../../components/SourceLink.astro';
 import DraftBadge from '../../components/DraftBadge.astro';
 import AdSlot from '../../components/AdSlot.astro';
 import SectionTitle from '../../components/SectionTitle.astro';
+import ShopImage from '../../components/ShopImage.astro';
+import Icon from '../../components/Icon.astro';
 import { artists, shopItems, latestCheck } from '../../lib/data';
 
 // 本番では approved の行が1つもないうちは「準備中」として検索に出さない
@@ -21,6 +23,23 @@ const exampleYen = examplePriceUsd * RATE;
 const exampleTaxable = Math.round(exampleYen * 0.6);
 const exampleTax = Math.round(exampleTaxable * 0.1);
 const yen = (n: number) => n.toLocaleString('ja-JP');
+
+// 購入の流れ（アイコン付きの5ステップ）
+const FLOW = [
+  { icon: 'search', title: '商品を選ぶ', text: '上の一覧から販売ページを開く' },
+  { icon: 'cart', title: 'カートに入れる', text: '配送先の国で「Japan」を選べるか確認' },
+  { icon: 'card', title: '支払う', text: 'クレジットカードかPayPal。外貨で払う' },
+  { icon: 'truck', title: '発送を待つ', text: 'メールで届く追跡番号で配送状況を確認' },
+  { icon: 'box', title: '受け取る', text: '必要なら消費税を配達員に払う（関税込み配送なら不要）' },
+];
+
+// 買い方4通り（かんたんな順）
+const WAYS = [
+  { icon: 'store', title: '公式ストアで買う', tag: 'かんたん', level: 'easy', text: '本人やメーカーの公式ストアから直接買います。いちばん確実です。' },
+  { icon: 'globe', title: '海外の楽器店で買う', tag: 'かんたん', level: 'easy', text: '日本へ発送してくれる店を選びます。配送先で日本を選べればOKです。' },
+  { icon: 'repeat', title: 'Reverbで買う', tag: 'ふつう', level: 'mid', text: '楽器専門のマーケットです。新品も中古もあり、出品ごとに発送条件と送料が違います。出品者の評価も確認しましょう。' },
+  { icon: 'plane', title: '転送サービスを使う', tag: '上級', level: 'hard', text: '日本に発送しない店で買うときに、海外の住所を借りて日本へ送り直してもらいます。手数料と送料が別にかかります。' },
+];
 ---
 <Base
   title="シグネチャー品の個人輸入ガイド"
@@ -45,23 +64,23 @@ const yen = (n: number) => n.toLocaleString('ja-JP');
             {items.length === 0 ? (
               <p class="muted">シグネチャー品の発売は確認できていません（{latestCheck(shopItems).replaceAll('-', '/') || '確認待ち'}時点）。</p>
             ) : (
-              <div class="table-scroll">
-                <table class="table">
-                  <thead><tr><th>アイテム</th><th>販売先</th><th>価格</th><th>日本への発送</th></tr></thead>
-                  <tbody>
-                    {items.map((r) => (
-                      <tr>
-                        <td>{r.item} <DraftBadge row={r} /><br /><span class="muted">{r.note_ja}</span> <SourceLink url={r.source_url} label={r.source_label} /></td>
-                        <td>
-                          <a href={r.affiliate_url || r.shop_url} target="_blank" rel={r.affiliate_url ? 'sponsored noopener' : 'noopener noreferrer'}>{r.shop_name}</a>
-                          {r.affiliate_url && <span class="pr-label">PR</span>}
-                        </td>
-                        <td>{r.price_note}</td>
-                        <td>{r.ships_ja}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+              <div class="shop-grid">
+                {items.map((r) => (
+                  <article class="shop-card">
+                    <ShopImage row={r} color={artist.color} />
+                    <div class="shop-body">
+                      <p class="shop-name">{r.item} <DraftBadge row={r} /></p>
+                      <dl class="shop-facts">
+                        <div><dt><Icon name="yen" size={14} />価格</dt><dd>{r.price_note}</dd></div>
+                        <div><dt><Icon name="truck" size={14} />日本へ</dt><dd>{r.ships_ja}</dd></div>
+                      </dl>
+                      <p class="muted shop-note">{r.note_ja} <SourceLink url={r.source_url} label={r.source_label} /></p>
+                      <a class="shop-btn" href={r.affiliate_url || r.shop_url} target="_blank" rel={r.affiliate_url ? 'sponsored noopener' : 'noopener noreferrer'}>
+                        {r.affiliate_url && <span class="pr-label">PR</span>}{r.shop_name}で見る<Icon name="external" size={14} />
+                      </a>
+                    </div>
+                  </article>
+                ))}
               </div>
             )}
           </div>
@@ -69,13 +88,33 @@ const yen = (n: number) => n.toLocaleString('ja-JP');
       </section>
 
       <section class="section">
-        <SectionTitle icon="plane" en="HOW TO BUY">買い方は4通り</SectionTitle>
-        <ol class="steps">
-          <li><strong>本人・メーカーの公式ストアから直接買う</strong>：いちばん確実です。支払いは米ドルなどの外貨で、クレジットカードかPayPalが一般的です。</li>
-          <li><strong>海外の楽器店で買う</strong>：日本へ発送してくれる店を選びます。発送の可否は購入画面の配送先で日本を選べるかで確認できます。</li>
-          <li><strong>Reverb（楽器専門のマーケット）で買う</strong>：新品・中古の出品が世界中から集まります。出品ごとに日本への発送の可否と送料が違うので、出品者の評価とあわせて確認しましょう。</li>
-          <li><strong>日本に発送しない店は転送サービスを使う</strong>：海外の住所を借りて、そこから日本へ送り直してもらう方法です。手数料と送料が別にかかり、ギターのような大きな荷物は高くなりがちです。</li>
+        <SectionTitle icon="cart" en="HOW IT WORKS">購入の流れ</SectionTitle>
+        <p>公式ストアや海外の楽器店で買うときは、だいたいこの5ステップです。</p>
+        <ol class="flow">
+          {FLOW.map((f, i) => (
+            <li class="flow-step">
+              <span class="flow-icon"><Icon name={f.icon} size={28} /></span>
+              <span class="flow-num">STEP {i + 1}</span>
+              <strong class="flow-title">{f.title}</strong>
+              <span class="flow-text">{f.text}</span>
+            </li>
+          ))}
         </ol>
+      </section>
+
+      <section class="section">
+        <SectionTitle icon="plane" en="4 WAYS">買い方は4通り</SectionTitle>
+        <div class="ways">
+          {WAYS.map((w) => (
+            <div class="way">
+              <span class="way-icon"><Icon name={w.icon} size={26} /></span>
+              <div>
+                <p class="way-title">{w.title}<span class={`way-tag way-tag--${w.level}`}>{w.tag}</span></p>
+                <p class="way-text">{w.text}</p>
+              </div>
+            </div>
+          ))}
+        </div>
       </section>
 
       <section class="section">
@@ -109,8 +148,44 @@ const yen = (n: number) => n.toLocaleString('ja-JP');
 <style>
   .pr-note { font-size: 13px; color: var(--muted); border: 1px solid var(--line); border-radius: 8px; padding: 8px 12px; }
   .pr-label { display: inline-block; font-size: 11px; font-weight: 700; color: #0b0b0f; background: var(--accent); border-radius: 4px; padding: 0 6px; margin: 0 6px 0 0; }
-  .shop-group { margin-bottom: 24px; }
-  .steps li, .section ul li { margin-bottom: 8px; }
+  .shop-group { margin-bottom: 28px; }
+  .section ul li { margin-bottom: 8px; }
+  .shop-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
+  .shop-card { display: flex; flex-direction: column; background: #121218; border: 1px solid var(--line); border-radius: 12px; padding: 12px; }
+  .shop-body { display: flex; flex-direction: column; gap: 8px; flex: 1; margin-top: 10px; }
+  .shop-name { font-weight: 700; margin: 0; }
+  .shop-facts { margin: 0; display: grid; gap: 4px; font-size: 13px; }
+  .shop-facts div { display: grid; grid-template-columns: 72px 1fr; gap: 6px; }
+  .shop-facts dt { color: var(--accent); display: flex; align-items: center; gap: 4px; }
+  .shop-facts dd { margin: 0; }
+  .shop-note { font-size: 12px; margin: 0; }
+  .shop-btn { margin-top: auto; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 10px 12px; border-radius: 8px; background: var(--accent); color: #0b0b0f; font-weight: 700; text-decoration: none; font-size: 14px; text-align: center; }
+  .shop-btn .pr-label { background: #0b0b0f; color: var(--accent); }
+  .flow { list-style: none; padding: 0; margin: 16px 0 0; display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; counter-reset: none; }
+  .flow-step { position: relative; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 4px; background: #121218; border: 1px solid var(--line); border-radius: 12px; padding: 16px 10px; }
+  .flow-step:not(:last-child)::after { content: '▶'; position: absolute; right: -11px; top: 38px; color: var(--accent); font-size: 12px; }
+  .flow-icon { display: grid; place-items: center; width: 56px; height: 56px; border-radius: 50%; background: var(--accent); color: #0b0b0f; }
+  .flow-num { font-size: 11px; letter-spacing: 0.1em; color: var(--accent); font-weight: 700; }
+  .flow-title { font-size: 15px; }
+  .flow-text { font-size: 12px; color: var(--muted); }
+  .ways { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
+  .way { display: flex; gap: 12px; align-items: flex-start; background: #121218; border: 1px solid var(--line); border-radius: 12px; padding: 14px; }
+  .way-icon { flex: none; display: grid; place-items: center; width: 48px; height: 48px; border-radius: 12px; border: 2px solid var(--accent); color: var(--accent); }
+  .way-title { font-weight: 700; margin: 0 0 4px; }
+  .way-text { font-size: 13px; margin: 0; color: var(--muted); }
+  .way-tag { font-size: 11px; font-weight: 700; border-radius: 999px; padding: 1px 8px; margin-left: 8px; vertical-align: middle; }
+  .way-tag--easy { background: #1f3d2a; color: #7ee2a0; }
+  .way-tag--mid { background: #3d351f; color: #f3d27a; }
+  .way-tag--hard { background: #3d1f2c; color: #ff8fb8; }
+  @media (max-width: 760px) {
+    .flow { grid-template-columns: 1fr; }
+    .flow-step { flex-direction: row; text-align: left; flex-wrap: wrap; column-gap: 12px; padding: 12px; }
+    .flow-step .flow-icon { width: 44px; height: 44px; }
+    .flow-step:not(:last-child)::after { content: '▼'; right: auto; left: 30px; top: auto; bottom: -15px; }
+    .flow-num, .flow-title, .flow-text { flex-basis: calc(100% - 60px); }
+    .flow-step { display: grid; grid-template-columns: 44px 1fr; align-items: center; }
+    .flow-icon { grid-row: span 3; }
+  }
   .calc { border-left: 4px solid var(--accent); background: rgba(255, 255, 255, 0.04); padding: 12px 16px; margin-top: 16px; }
   .calc-title { font-weight: 700; margin: 0 0 6px; }
 </style>

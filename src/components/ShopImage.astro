@@ -1,0 +1,72 @@
+---
+// 個人輸入ガイドの商品画像。image_url（メーカー許諾の商品画像など）があれば写真＋クレジット、
+// なければ自作のイメージ図（illust 列: guitar / tab / shirt / wah / pick）を表示する。
+import type { ShopItem } from '../lib/data';
+interface Props { row: ShopItem; color?: string }
+const { row, color = 'var(--accent)' } = Astro.props;
+const kind = row.illust || 'guitar';
+---
+{row.image_url ? (
+  <figure class="shop-img">
+    <img src={row.image_url} alt={row.item} loading="lazy" decoding="async" />
+    <figcaption>{row.image_license === 'メーカー許諾' ? `画像提供：${row.image_credit}` : `写真: ${row.image_credit}${row.image_license ? ` ／ ${row.image_license}` : ''}`}</figcaption>
+  </figure>
+) : (
+  <figure class="shop-img shop-img--illust" style={`--gear:${color}`}>
+    <svg viewBox="0 0 120 120" role="img" aria-label={`${row.item}（イメージ図）`}>
+      {kind === 'guitar' && (
+        <g>
+          <rect x="56" y="6" width="8" height="54" rx="2" class="neck" />
+          <path d="M52 2h16l-2 10H54z" class="head" />
+          <path d="M60 56c-10-6-26-10-28 2-2 9 8 12 6 20-2 10-12 14-6 24 6 10 22 12 28 12s22-2 28-12c6-10-4-14-6-24-2-8 8-11 6-20-2-12-18-8-28-2z" class="body" />
+          <rect x="50" y="74" width="20" height="5" rx="2" class="part" /><rect x="50" y="86" width="20" height="5" rx="2" class="part" />
+        </g>
+      )}
+      {kind === 'tab' && (
+        <g>
+          <rect x="28" y="14" width="64" height="92" rx="4" class="body" />
+          <rect x="36" y="24" width="48" height="10" rx="2" class="head" />
+          {[46, 52, 58, 64, 70, 76].map((y) => <path d={`M36 ${y}h48`} class="line" />)}
+          <text x="40" y="57" class="num">5</text><text x="56" y="69" class="num">7</text><text x="70" y="75" class="num">9</text>
+          <path d="M60 86v12m-6-6 6 6 6-6" class="arrow" />
+        </g>
+      )}
+      {kind === 'shirt' && (
+        <g>
+          <path d="M42 16 22 28l8 16 10-5v61h40V39l10 5 8-16-20-12c-2 6-8 10-18 10s-16-4-18-10z" class="body" />
+          <path d="M50 58l6-8 4 6 4-6 6 8-10 14z" class="head" />
+        </g>
+      )}
+      {kind === 'wah' && (
+        <g>
+          <path d="M14 78h92v18a4 4 0 0 1-4 4H18a4 4 0 0 1-4-4z" class="body" />
+          <path d="M18 74 96 44a4 4 0 0 1 5 2l3 8a4 4 0 0 1-2 5L24 88z" class="neck" />
+          {[0, 1, 2, 3, 4].map((i) => <path d={`M${34 + i * 13} ${73 - i * 5}l4 9`} class="ridge" />)}
+          <circle cx="22" cy="82" r="5" class="head" />
+          <rect x="84" y="84" width="14" height="6" rx="2" class="head" />
+        </g>
+      )}
+      {kind === 'pick' && (
+        <g>
+          <path d="M60 106C40 86 22 60 24 38c2-16 18-24 36-24s34 8 36 24c2 22-16 48-36 68z" class="body" />
+          <path d="m64 34-14 22h10l-6 22 18-28H62l6-16z" class="head" />
+        </g>
+      )}
+    </svg>
+    <figcaption>イメージ図</figcaption>
+  </figure>
+)}
+
+<style>
+  .shop-img { margin: 0; }
+  .shop-img img, .shop-img svg { display: block; width: 100%; aspect-ratio: 1; object-fit: contain; border-radius: 10px; background: #15151b; border: 1px solid #2a2a33; }
+  .shop-img figcaption { font-size: 10px; color: var(--muted); margin-top: 3px; text-align: center; }
+  .shop-img--illust .body { fill: var(--gear); }
+  .shop-img--illust .neck { fill: #2b2b33; }
+  .shop-img--illust .head { fill: #e8e8ee; }
+  .shop-img--illust .part { fill: #0b0b0e; stroke: #e8e8ee; stroke-width: 1.2; }
+  .shop-img--illust .line { stroke: #0b0b0e; stroke-width: 1.5; opacity: 0.6; }
+  .shop-img--illust .ridge { stroke: #e8e8ee; stroke-width: 2; stroke-linecap: round; opacity: 0.5; }
+  .shop-img--illust .num { font: 700 9px sans-serif; fill: #0b0b0e; }
+  .shop-img--illust .arrow { stroke: #e8e8ee; stroke-width: 3; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+</style>
