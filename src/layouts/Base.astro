@@ -31,7 +31,11 @@ const enPath = Astro.url.pathname.replace(/^\/ja\//, '/en/');
     <link rel="canonical" href={canonical} />
     <link rel="alternate" hreflang="ja" href={canonical} />
     {hasEnglish && <link rel="alternate" hreflang="en" href={new URL(enPath, SITE.url).href} />}
+    <link rel="icon" href="/favicon.ico" sizes="48x48" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="theme-color" content="#0b0b0f" />
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
