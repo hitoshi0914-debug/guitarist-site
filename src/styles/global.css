@@ -210,3 +210,116 @@ a.tcard:hover { transform: translateY(-4px) rotate(-.5deg); box-shadow: 0 16px 4
 .gear-name { color: inherit; text-decoration: underline dotted; }
 .gear-name::after { content: " ↗"; font-size: 12px; color: var(--muted); }
 .gear-img img { background: #fff; }
+
+/* ===== アイコン化・視認性アップ（2026-10） ===== */
+.icon { flex: none; vertical-align: middle; }
+
+/* ヘッダー：アイコン付きナビ。スマホは横スクロール1行 */
+.nav a { display: inline-flex; align-items: center; gap: 5px; }
+.nav a .icon { color: var(--accent); }
+@media (max-width: 720px) {
+  .header-inner { flex-wrap: nowrap; flex-direction: column; align-items: stretch; gap: 6px; }
+  .nav { flex-wrap: nowrap; overflow-x: auto; gap: 6px; padding-bottom: 4px; scrollbar-width: none; margin: 0 -16px; padding-left: 16px; padding-right: 16px; }
+  .nav::-webkit-scrollbar { display: none; }
+  .nav a { white-space: nowrap; padding: 5px 12px; border: 1px solid var(--line); border-radius: 999px; background: var(--bg-2); }
+  .nav a[aria-current='page'] { background: var(--accent); border-color: var(--accent); color: #111; }
+  .nav a[aria-current='page'] .icon { color: #111; }
+}
+
+/* 見出し：マゼンタの角アイコン＋英字ラベル */
+.sec-title { display: flex; align-items: center; gap: 12px; border-left: 0; padding-left: 0; scroll-margin-top: 90px; }
+.sec-icon { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 10px; flex: none;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: #fff; box-shadow: 0 4px 16px rgba(255, 43, 214, .35);
+  transform: skewX(-8deg); }
+.sec-icon .icon { transform: skewX(8deg); }
+.sec-text { display: flex; flex-direction: column; line-height: 1.15; }
+.sec-en { font-family: var(--body); font-weight: 700; font-size: 11px; letter-spacing: .25em; color: var(--accent); margin-top: 3px; }
+
+/* トップ */
+.hero-tags { list-style: none; padding: 0; margin: 16px 0 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+.hero-tags li { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700; padding: 6px 14px; border-radius: 999px; border: 1px solid var(--line); background: var(--bg-2); }
+.hero-tags .icon { color: var(--accent); }
+.featured-label { display: inline-flex; align-items: center; gap: 6px; }
+.entry { flex-direction: row; align-items: center; gap: 14px; padding: 18px; position: relative; overflow: hidden; transition: transform .2s ease, border-color .2s ease; }
+.entry:hover { transform: translateY(-3px); }
+.entry-icon { display: grid; place-items: center; width: 56px; height: 56px; border-radius: 14px; flex: none; color: var(--accent);
+  background: radial-gradient(circle at 30% 20%, rgba(255, 43, 214, .35), rgba(255, 43, 214, .08)); border: 1px solid rgba(255, 43, 214, .45); }
+.entry-body { display: flex; flex-direction: column; flex: 1; font-size: 14px; }
+.entry-title { font-size: 20px; }
+.entry-arrow { color: var(--accent); transition: transform .2s ease; }
+.entry:hover .entry-arrow { transform: translateX(4px); }
+
+/* カード：国・バンド・ギターをアイコンで */
+.tcard-stats div { grid-template-columns: 22px 1fr; align-items: center; }
+.tcard-stats dt { display: grid; place-items: center; }
+.cc { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: .08em; padding: 0 6px; margin-right: 6px; border-radius: 4px; background: var(--card); color: #111; line-height: 1.7; }
+
+/* 確認日・出典 */
+.trust-item::before { content: none; }
+.trust-item { display: inline-flex; align-items: center; gap: 5px; }
+.trust-item .icon { color: var(--accent); }
+
+/* 個人ページ：要点をカード化 */
+.points { list-style: none; padding: 0; display: grid; gap: 8px; margin: 12px 0; }
+.points li { display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; border-radius: 10px; background: var(--bg-2); border: 1px solid var(--line); font-size: 15px; line-height: 1.5; }
+.point-icon { color: var(--gold); fill: var(--gold); margin-top: 2px; }
+
+/* ページ内ジャンプ（アイコンタブ） */
+.jump { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; margin: 28px 0 8px; }
+.jump a { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 10px 4px; border-radius: 12px; background: var(--bg-2); border: 1px solid var(--line);
+  color: var(--text); text-decoration: none; font-size: 12px; font-weight: 700; }
+.jump a .icon { color: var(--accent); }
+.jump a:hover { border-color: var(--accent); color: var(--text); background: var(--bg-3); }
+@media (max-width: 520px) { .jump { grid-template-columns: repeat(3, 1fr); } }
+
+/* 機材：カードのグリッド */
+.gear-cards { list-style: none; padding: 0; margin: 0 0 12px; display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); }
+.gear-card { display: flex; gap: 14px; padding: 14px; border-radius: 14px; background: var(--bg-2); border: 1px solid var(--line); }
+.gear-card:hover { border-color: color-mix(in srgb, var(--accent) 60%, var(--line)); }
+.gear-card .gear-img--md { width: 110px; }
+.gear-card-body { min-width: 0; font-size: 14px; line-height: 1.6; }
+.gear-card-body .gear-note { font-size: 13px; color: var(--muted); }
+.cat-badge { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 700; letter-spacing: .05em; padding: 1px 8px; margin-bottom: 4px; border-radius: 999px;
+  color: var(--accent); border: 1px solid rgba(255, 43, 214, .5); background: rgba(255, 43, 214, .08); }
+.chip { display: inline-flex; align-items: center; gap: 6px; }
+.row-cat { display: inline-flex; align-items: center; gap: 6px; }
+
+/* SNSボタン（ロゴ風アイコン） */
+.sns-icons { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+.sns-btn { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-radius: 12px; background: var(--bg-2); border: 1px solid var(--line);
+  color: var(--text); text-decoration: none; font-weight: 700; font-size: 14px; transition: transform .15s ease, border-color .15s ease; }
+a.sns-btn:hover { transform: translateY(-2px); border-color: var(--accent); color: var(--text); }
+.sns-btn.is-off { color: var(--muted); }
+.sns-instagram .icon { color: #ff4fa3; }
+.sns-youtube .icon { color: #ff3b3b; }
+.sns-facebook .icon { color: #3b8cff; }
+.sns-globe .icon { color: var(--gold); }
+.sns-tiktok .icon { color: #25f4ee; }
+
+/* ストリートチーム誘導バナー */
+.st-banner { margin: 32px 0; padding: 14px; border-radius: 18px; background: linear-gradient(135deg, rgba(255, 43, 214, .22), rgba(32, 160, 255, .12)), var(--bg-2); border: 1px solid rgba(255, 43, 214, .55); box-shadow: 0 10px 34px rgba(255, 43, 214, .18); }
+.st-banner-kicker { display: flex; align-items: center; gap: 6px; margin: 0 0 10px 4px; font-family: var(--heading); font-size: 16px; color: var(--gold); }
+.st-banner-kicker .icon { color: var(--accent); fill: var(--accent); }
+.st-banner-img { display: block; border-radius: 12px; overflow: hidden; }
+.st-banner-img img { width: 100%; height: auto; transition: transform .3s ease; }
+.st-banner-img:hover img { transform: scale(1.02); }
+.st-banner-cta { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-top: 12px; }
+.st-banner-lead { margin: 0; font-size: 14px; color: var(--muted); }
+.st-banner-lead strong { display: block; font-family: var(--heading); font-weight: 400; font-size: 20px; color: var(--text); }
+.st-follow { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.st-follow-btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: 999px; font-weight: 700; font-size: 14px; text-decoration: none; color: #fff; background: #000; border: 1px solid #444; transition: transform .15s ease; }
+.st-follow-btn:hover { transform: translateY(-2px); color: #fff; }
+.st-follow-btn.sns-instagram { background: linear-gradient(45deg, #f9a825, #e91e63 45%, #8e24aa); border-color: transparent; }
+.st-follow-btn.sns-instagram .icon { color: #fff; }
+.st-follow-btn.sns-facebook { background: #1877f2; border-color: transparent; }
+.st-follow-btn.sns-facebook .icon { color: #fff; }
+@media (max-width: 720px) {
+  .st-follow { width: 100%; display: grid; grid-template-columns: repeat(3, 1fr); }
+  .st-follow-btn { width: 100%; justify-content: center; flex-direction: column; gap: 2px; padding: 8px 4px; border-radius: 12px; font-size: 11px; }
+  .st-follow-btn span { white-space: nowrap; }
+  .st-follow-suffix { display: none; }
+}
+
+/* カード名は改行させず、長い名前はカード幅に合わせて少し縮める */
+.tcard-frame { container-type: inline-size; }
+.tcard-ja { white-space: nowrap; font-size: min(20px, 8cqi); }

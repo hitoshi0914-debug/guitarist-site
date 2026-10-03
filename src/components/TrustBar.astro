@@ -2,8 +2,9 @@
 // ページ上部の「確認日」表示
 interface Props { checkedOn?: string; }
 const { checkedOn } = Astro.props;
+import Icon from './Icon.astro';
 ---
 <p class="trust-bar">
-  <span class="trust-item">確認日：{checkedOn ? <time datetime={checkedOn}>{checkedOn.replaceAll('-', '/')}</time> : '確認待ち'}</span>
-  <span class="trust-item">出典は各項目のリンクから確認できます</span>
+  <span class="trust-item"><Icon name="calendar" size={14} />確認日 {checkedOn ? <time datetime={checkedOn}>{checkedOn.replaceAll('-', '/')}</time> : '確認待ち'}</span>
+  <span class="trust-item"><Icon name="check" size={14} />全項目に出典リンクつき</span>
 </p>

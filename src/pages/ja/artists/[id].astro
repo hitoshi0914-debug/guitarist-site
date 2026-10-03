@@ -8,6 +8,10 @@ import GearImage from '../../../components/GearImage.astro';
 import DraftBadge from '../../../components/DraftBadge.astro';
 import EditorNote from '../../../components/EditorNote.astro';
 import AdSlot from '../../../components/AdSlot.astro';
+import Icon from '../../../components/Icon.astro';
+import SectionTitle from '../../../components/SectionTitle.astro';
+import SnsLinks from '../../../components/SnsLinks.astro';
+import StreetTeamBanner from '../../../components/StreetTeamBanner.astro';
 import { artists, timeline, gear, gearVideos, songs, japan, byArtist, latestCheck, GEAR_CATEGORIES, type Artist } from '../../../lib/data';
 
 export function getStaticPaths() {
@@ -25,7 +29,13 @@ const years = (f: string, t: string) => (!f ? '時期調査中' : t === f ? f : 
 const sns = [
   ['公式サイト', a.official_site], ['Instagram', a.instagram], ['X', a.x],
   ['Facebook', a.facebook], ['YouTube', a.youtube], ['TikTok', a.tiktok],
-].filter(([, url]) => url);
+].filter(([, url]) => url) as [string, string][];
+const CAT_ICON: Record<string, string> = { guitar: 'guitar', amp: 'amp', effects: 'pedal' };
+const isNita = a.id === 'nita-strauss';
+const jump = [
+  ['bio', '経歴', 'profile'], ['bands', 'バンド', 'history'], ['gear', '機材', 'guitar'],
+  ['songs', '動画', 'play'], ['japan', '来日', 'plane'], ['sns', 'SNS', 'link'],
+];
 ---
 <Base title={`${a.name_ja}（${a.name_en}）`} description={`${a.name_ja}（${a.name_en}）の経歴・バンド変遷・使用機材・おすすめ曲・来日情報・公式SNSを出典つきでまとめています。`}>
   <nav class="crumbs"><a href="/ja/">トップ</a> / <span>{a.name_ja}</span></nav>
@@ -37,7 +47,7 @@ const sns = [
       <h1 class="h1">{a.name_ja} <DraftBadge row={a} /></h1>
       <TrustBar checkedOn={checkedOn} />
       <ul class="points">
-        {points.map((p) => <li>{p}</li>)}
+        {points.map((p) => <li><Icon name="star" size={16} class="point-icon" /><span>{p}</span></li>)}
       </ul>
       <SourceLink url={a.source_url} label={a.source_label} />
       {a.photo_credit && (
@@ -46,15 +56,21 @@ const sns = [
     </div>
   </section>
 
+  <nav class="jump" aria-label="このページの目次">
+    {jump.map(([id, label, icon]) => <a href={`#${id}`}><Icon name={icon} size={18} /><span>{label}</span></a>)}
+  </nav>
+
+  {isNita && <StreetTeamBanner />}
+
   <AdSlot />
 
   <section class="section">
-    <h2 class="h2">経歴</h2>
+    <SectionTitle icon="profile" en="PROFILE" id="bio">経歴</SectionTitle>
     <p>{a.bio_ja}</p>
   </section>
 
   <section class="section">
-    <h2 class="h2">バンド変遷</h2>
+    <SectionTitle icon="history" en="HISTORY" id="bands">バンド変遷</SectionTitle>
     {tl.length === 0 ? <p class="muted">調査中です。</p> : (
       <ol class="timeline">
         {tl.map((t) => (
@@ -71,14 +87,14 @@ const sns = [
   </section>
 
   <section class="section">
-    <h2 class="h2">使用機材</h2>
+    <SectionTitle icon="guitar" en="GEAR" id="gear">使用機材</SectionTitle>
     {gr.length === 0 ? <p class="muted">調査中です。</p> : (
-      <ul class="gear-list">
+      <ul class="gear-cards">
         {gr.map((g) => (
-          <li class="gear-item">
-            <GearImage row={g} color={a.color || undefined} size="sm" />
-            <div>
-              <span class="muted">{GEAR_CATEGORIES[g.category] ?? g.category}</span>
+          <li class="gear-card">
+            <GearImage row={g} color={a.color || undefined} size="md" />
+            <div class="gear-card-body">
+              <span class="cat-badge"><Icon name={CAT_ICON[g.category] ?? 'guitar'} size={14} />{GEAR_CATEGORIES[g.category] ?? g.category}</span>
               <div>{g.maker_url ? <a class="gear-name" href={g.maker_url} target="_blank" rel="noopener"><strong>{g.maker}</strong> {g.item}</a> : <><strong>{g.maker}</strong> {g.item}</>}
 {g.image_note && <div class="muted small">※{g.image_note}</div>} <DraftBadge row={g} /></div>
               <p class="gear-note">{g.note_ja}</p>
@@ -96,7 +112,7 @@ const sns = [
   <AdSlot />
 
   <section class="section">
-    <h2 class="h2">おすすめ曲・公式動画</h2>
+    <SectionTitle icon="play" en="VIDEOS" id="songs">おすすめ曲・公式動画</SectionTitle>
     {sg.length === 0 ? <p class="muted">準備中です。公式YouTubeから選んで追加します。</p> : (
       <div class="video-grid">
         {sg.map((s) => (
@@ -112,7 +128,7 @@ const sns = [
   </section>
 
   <section class="section">
-    <h2 class="h2">来日情報</h2>
+    <SectionTitle icon="plane" en="IN JAPAN" id="japan">来日情報</SectionTitle>
     {jp.length === 0 ? <p class="muted">調査中です。</p> : (
       <ul class="plain-list">
         {jp.map((j) => (
@@ -123,17 +139,13 @@ const sns = [
   </section>
 
   <section class="section">
-    <h2 class="h2">公式SNS・リンク</h2>
-    <ul class="sns-list">
-      {sns.map(([label, url]) => <li><a href={url} target="_blank" rel="noopener noreferrer">{label}</a></li>)}
-    </ul>
+    <SectionTitle icon="link" en="OFFICIAL LINKS" id="sns">公式SNS・リンク</SectionTitle>
+    <SnsLinks links={sns} />
   </section>
 
   <EditorNote text={a.editor_note_ja} />
 
-  {a.id === 'nita-strauss' && (
-    <p class="callout"><a href="/ja/nita-street-team/">ニタ・ストラウス 日本ストリートチームの紹介はこちら</a></p>
-  )}
+  {isNita && <StreetTeamBanner />}
 
   <AdSlot />
 </Base>

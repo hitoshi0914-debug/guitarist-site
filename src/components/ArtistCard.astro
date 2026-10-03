@@ -2,6 +2,8 @@
 // トレカ風カード
 import type { Artist } from '../lib/data';
 import DraftBadge from './DraftBadge.astro';
+import Icon from './Icon.astro';
+import { COUNTRY_CODE } from '../lib/site';
 interface Props { artist: Artist; size?: 'large' | 'normal'; link?: boolean; }
 const { artist: a, size = 'normal', link = true } = Astro.props;
 const Tag = link ? 'a' : 'div';
@@ -27,9 +29,9 @@ const initials = a.name_en.split(' ').map((w) => w[0]).join('');
       <p class="tcard-en">{a.name_en}{a.nickname && <span> / {a.nickname}</span>}</p>
     </div>
     <dl class="tcard-stats">
-      <div><dt>国</dt><dd>{a.country || '—'}</dd></div>
-      <div><dt>バンド</dt><dd>{a.current_band || '—'}</dd></div>
-      <div><dt>ギター</dt><dd>{a.main_guitar || '調査中'}</dd></div>
+      <div><dt><Icon name="globe" size={16} label="国" /></dt><dd>{a.country ? <><span class="cc">{COUNTRY_CODE[a.country] ?? a.country}</span>{COUNTRY_CODE[a.country] && a.country}</> : '—'}</dd></div>
+      <div><dt><Icon name="band" size={16} label="バンド" /></dt><dd>{a.current_band || '—'}</dd></div>
+      <div><dt><Icon name="guitar" size={16} label="ギター" /></dt><dd>{a.main_guitar || '調査中'}</dd></div>
     </dl>
     {a.photo_credit && <p class="tcard-credit">Photo: {a.photo_credit}{a.photo_license && ` (${a.photo_license})`}</p>}
   </div>
