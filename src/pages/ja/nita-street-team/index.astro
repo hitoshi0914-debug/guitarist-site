@@ -1,11 +1,14 @@
 ---
 import Base from '../../../layouts/Base.astro';
 import { STREET_TEAM } from '../../../lib/site';
+import SectionTitle from '../../../components/SectionTitle.astro';
+import SnsLinks from '../../../components/SnsLinks.astro';
+import StreetTeamBanner from '../../../components/StreetTeamBanner.astro';
 const sns = [
   ['Instagram', STREET_TEAM.instagram],
   ['X', STREET_TEAM.x],
   ['Facebook', STREET_TEAM.facebook],
-];
+] as [string, string][];
 ---
 <Base title="ニタ・ストラウス 日本ストリートチーム" description="ニタ・ストラウスの日本ストリートチームの紹介、参加案内、活動レポート。">
   <section class="st-hero">
@@ -14,29 +17,27 @@ const sns = [
     <p>日本からニタ・ストラウスを応援するファンのチームです。当サイトの運営者が運営しています。</p>
   </section>
 
+  <StreetTeamBanner href={STREET_TEAM.x || '/ja/nita-street-team/'} heading={false} />
+
   <section class="section">
-    <h2 class="h2">ストリートチームとは</h2>
+    <SectionTitle icon="megaphone" en="ABOUT">ストリートチームとは</SectionTitle>
     <p>アーティストの新曲やツアーの情報を広め、ファン同士で応援を盛り上げる有志のチームです。来日公演の情報共有や、ファン企画を行っています。</p>
   </section>
 
   <section class="section">
-    <h2 class="h2">公式SNS</h2>
-    <ul class="sns-list">
-      {sns.map(([label, url]) => (
-        <li>{url ? <a href={url} target="_blank" rel="noopener noreferrer">{label}</a> : <span class="muted">{label}（準備中）</span>}</li>
-      ))}
-    </ul>
+    <SectionTitle icon="link" en="FOLLOW US">公式SNS</SectionTitle>
+    <SnsLinks links={sns} />
   </section>
 
   <section class="section">
-    <h2 class="h2">参加するには</h2>
+    <SectionTitle icon="heart" en="JOIN">参加するには</SectionTitle>
     {STREET_TEAM.joinForm
       ? <p><a class="btn" href={STREET_TEAM.joinForm} target="_blank" rel="noopener noreferrer">参加フォームへ</a></p>
       : <p>参加方法は準備中です。いまは<a href="/ja/contact/">お問い合わせ</a>からご連絡ください。</p>}
   </section>
 
   <section class="section">
-    <h2 class="h2">活動レポート</h2>
+    <SectionTitle icon="calendar" en="REPORT">活動レポート</SectionTitle>
     <p class="muted">来日公演やイベントのレポートをここに掲載していきます。</p>
   </section>
 

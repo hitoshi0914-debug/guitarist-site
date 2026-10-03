@@ -17,10 +17,15 @@ export const STREET_TEAM = {
 };
 
 export const NAV = [
-  { href: '/ja/', label: 'トップ' },
-  { href: '/ja/gear/', label: '機材比較' },
-  { href: '/ja/quiz/', label: '診断' },
-  { href: '/ja/nita-street-team/', label: 'ストリートチーム' },
-  { href: '/ja/glossary/', label: '用語集' },
-  { href: '/ja/news/', label: '更新情報' },
+  { href: '/ja/', label: 'トップ', icon: 'home' },
+  { href: '/ja/gear/', label: '機材比較', icon: 'guitar' },
+  { href: '/ja/quiz/', label: '診断', icon: 'quiz' },
+  { href: '/ja/nita-street-team/', label: 'ストリートチーム', icon: 'megaphone' },
+  { href: '/ja/glossary/', label: '用語集', icon: 'book' },
+  { href: '/ja/news/', label: '更新情報', icon: 'bell' },
 ];
+
+// カードに出す国の略号（国旗の絵文字はWindowsで表示されないため文字で出す）
+export const COUNTRY_CODE: Record<string, string> = {
+  アメリカ: 'USA', イギリス: 'UK', 日本: 'JPN', カナダ: 'CAN', ドイツ: 'GER', スイス: 'SUI', オーストラリア: 'AUS',
+};

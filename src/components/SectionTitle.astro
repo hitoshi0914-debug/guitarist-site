@@ -1,0 +1,10 @@
+---
+// 見出し：アイコン＋日本語＋小さな英字ラベル
+import Icon from './Icon.astro';
+interface Props { icon: string; en?: string; id?: string; }
+const { icon, en, id } = Astro.props;
+---
+<h2 class="h2 sec-title" id={id}>
+  <span class="sec-icon"><Icon name={icon} size={22} /></span>
+  <span class="sec-text"><slot />{en && <span class="sec-en">{en}</span>}</span>
+</h2>

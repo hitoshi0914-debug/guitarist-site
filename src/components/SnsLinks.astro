@@ -1,0 +1,20 @@
+---
+// SNSリンクをロゴ風アイコンのボタンで並べる
+import Icon from './Icon.astro';
+interface Props { links: [string, string][]; }
+const { links } = Astro.props;
+const ICON: Record<string, string> = { '公式サイト': 'globe', Instagram: 'instagram', X: 'x', Facebook: 'facebook', YouTube: 'youtube', TikTok: 'tiktok' };
+---
+<ul class="sns-icons">
+  {links.map(([label, url]) => (
+    <li>
+      {url ? (
+        <a class={`sns-btn sns-${(ICON[label] ?? 'link')}`} href={url} target="_blank" rel="noopener noreferrer">
+          <Icon name={ICON[label] ?? 'link'} size={22} /><span>{label}</span>
+        </a>
+      ) : (
+        <span class="sns-btn is-off"><Icon name={ICON[label] ?? 'link'} size={22} /><span>{label}（準備中）</span></span>
+      )}
+    </li>
+  ))}
+</ul>

@@ -1,0 +1,34 @@
+---
+// ニタ・ストラウス 日本ストリートチーム「Hurricane Japan」へのフォロー誘導バナー
+import Icon from './Icon.astro';
+import { STREET_TEAM } from '../lib/site';
+interface Props { href?: string; heading?: boolean; }
+const { href = '/ja/nita-street-team/', heading = true } = Astro.props;
+const follow = [
+  ['X', 'x', STREET_TEAM.x],
+  ['Instagram', 'instagram', STREET_TEAM.instagram],
+  ['Facebook', 'facebook', STREET_TEAM.facebook],
+].filter(([, , url]) => url);
+---
+<aside class="st-banner" aria-label="ニタ・ストラウス 日本ストリートチーム">
+  {heading && (
+    <p class="st-banner-kicker"><Icon name="heart" size={16} /> ニタを日本から一緒に応援しよう</p>
+  )}
+  <a class="st-banner-img" href={href}>
+    <img
+      src="/images/street-team/hurricanejapan-banner.webp"
+      srcset="/images/street-team/hurricanejapan-banner-800.webp 800w, /images/street-team/hurricanejapan-banner.webp 1600w"
+      sizes="(max-width: 1100px) 100vw, 1068px"
+      width="1600" height="529" loading="lazy" decoding="async"
+      alt="HURRICANE JAPAN ニタ・ストラウス 日本ストリートチーム"
+    />
+  </a>
+  <div class="st-banner-cta">
+    <p class="st-banner-lead"><strong>フォローしてね！</strong>来日情報やニタの最新ニュースを日本語でお届けしています</p>
+    <ul class="st-follow">
+      {follow.map(([label, icon, url]) => (
+        <li><a class={`st-follow-btn sns-${icon}`} href={url} target="_blank" rel="noopener noreferrer"><Icon name={icon} size={20} /><span>{label}<span class="st-follow-suffix">でフォロー</span></span></a></li>
+      ))}
+    </ul>
+  </div>
+</aside>
