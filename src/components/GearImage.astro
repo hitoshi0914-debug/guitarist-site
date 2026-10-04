@@ -48,6 +48,14 @@ const kind = row.illust || (row.category === 'guitar' ? 'superstrat' : row.categ
           <rect x="50" y="80" width="20" height="6" rx="2" class="part" /><rect x="50" y="94" width="20" height="5" rx="2" class="part" /><circle cx="82" cy="102" r="3" class="part" />
         </g>
       )}
+      {kind === 'acoustic' && (
+        <g>
+          <rect x="56" y="6" width="8" height="50" rx="2" class="neck" />
+          <path d="M51 2h18l-1 10H52z" class="head" />
+          <path d="M60 50c-8 0-20-2-22 10-2 10 6 12 2 20-4 8-10 12-8 22 2 10 16 14 28 14s26-4 28-14c2-10-4-14-8-22-4-8 4-10 2-20-2-12-14-10-22-10z" class="body" />
+          <circle cx="60" cy="74" r="9" class="neck" /><rect x="50" y="96" width="20" height="4" rx="2" class="part" />
+        </g>
+      )}
       {kind === 'amp-head' && (
         <g>
           <rect x="18" y="38" width="84" height="44" rx="6" class="body" />

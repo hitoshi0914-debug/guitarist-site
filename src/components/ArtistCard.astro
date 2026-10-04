@@ -7,6 +7,8 @@ import { COUNTRY_CODE } from '../lib/site';
 interface Props { artist: Artist; size?: 'large' | 'normal'; link?: boolean; }
 const { artist: a, size = 'normal', link = true } = Astro.props;
 const Tag = link ? 'a' : 'div';
+// 長い名前は「・」の後ろで折り返せるように区切る
+const nameParts = a.name_ja.split('・').map((part, i, arr) => (i < arr.length - 1 ? `${part}・` : part));
 const initials = a.name_en.split(' ').map((w) => w[0]).join('');
 ---
 <Tag class={`tcard tcard-${size}`} href={link ? `/ja/artists/${a.id}/` : undefined} style={`--card:${a.color || '#ff2bd6'}`}>
@@ -25,7 +27,7 @@ const initials = a.name_en.split(' ').map((w) => w[0]).join('');
       )}
     </div>
     <div class="tcard-name">
-      <p class="tcard-ja">{a.name_ja}</p>
+      <p class="tcard-ja">{nameParts.map((part) => <span class="tcard-ja-part">{part}</span>)}</p>
       <p class="tcard-en">{a.name_en}{a.nickname && <span> / {a.nickname}</span>}</p>
     </div>
     <dl class="tcard-stats">

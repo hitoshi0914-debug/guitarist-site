@@ -13,7 +13,7 @@ const others = artists.filter((a) => a.featured !== '1');
   <section class="hero">
     <p class="hero-kicker">海外の女性ギタリスト図鑑</p>
     <h1 class="hero-title">SHRED<br />QUEENS</h1>
-    <p class="hero-lead">世界のステージで弾きまくる4人を、出典つきで深掘り。</p>
+    <p class="hero-lead">世界のステージで弾きまくる{artists.length}人を、出典つきで深掘り。</p>
     <ul class="hero-tags">
       <li><Icon name="profile" size={16} />経歴</li>
       <li><Icon name="guitar" size={16} />機材</li>
@@ -39,7 +39,7 @@ const others = artists.filter((a) => a.featured !== '1');
   <AdSlot />
 
   <section class="entry-grid" aria-label="コンテンツ">
-    <a class="entry" href="/ja/gear/"><span class="entry-icon"><Icon name="amp" size={30} /></span><span class="entry-body"><span class="entry-title">機材比較</span><span>4人の機材を横並びで</span></span><Icon name="arrow" class="entry-arrow" /></a>
+    <a class="entry" href="/ja/gear/"><span class="entry-icon"><Icon name="amp" size={30} /></span><span class="entry-body"><span class="entry-title">機材比較</span><span>{artists.length}人の機材を横並びで</span></span><Icon name="arrow" class="entry-arrow" /></a>
     <a class="entry" href="/ja/quiz/"><span class="entry-icon"><Icon name="quiz" size={30} /></span><span class="entry-body"><span class="entry-title">診断</span><span>あなたに合うのは誰？</span></span><Icon name="arrow" class="entry-arrow" /></a>
     <a class="entry" href="/ja/nita-street-team/"><span class="entry-icon"><Icon name="megaphone" size={30} /></span><span class="entry-body"><span class="entry-title">ストリートチーム</span><span>ニタを日本から応援</span></span><Icon name="arrow" class="entry-arrow" /></a>
   </section>

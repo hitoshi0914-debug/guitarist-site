@@ -12,10 +12,10 @@ import { artists, gear, gearVideos, shopItems, GEAR_CATEGORIES, latestCheck } fr
 const cats = Object.entries(GEAR_CATEGORIES);
 const CAT_ICON: Record<string, string> = { guitar: 'guitar', amp: 'amp', effects: 'pedal' };
 ---
-<Base title="機材比較" description="ニタ・ストラウス、コートニー・コックス、ブリット・ライトニング、アンナ・カーラの使用機材（ギター・アンプ・エフェクター）を出典つきで比較。">
+<Base title="機材比較" description={`${artists.map((a) => a.name_ja).join("、")}の使用機材（ギター・アンプ・エフェクター）を出典つきで比較。`}>
   <h1 class="h1">機材比較</h1>
   <TrustBar checkedOn={latestCheck(gear)} />
-  <p>4人の使用機材を種類ごとに横並びで比べられます。各機材には出典と「公式」「インタビュー」のラベルを付けています。用語がわからないときは<a href="/ja/glossary/">機材用語集</a>へ。</p>
+  <p>{artists.length}人の使用機材を種類ごとに横並びで比べられます。各機材には出典と「公式」「インタビュー」のラベルを付けています。用語がわからないときは<a href="/ja/glossary/">機材用語集</a>へ。</p>
   {shopItems.length > 0 && <p>シグネチャーモデルを日本から買う方法は<a href="/ja/import-guide/">個人輸入ガイド</a>にまとめています。</p>}
 
   {gearVideos.length > 0 && (
