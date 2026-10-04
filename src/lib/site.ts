@@ -27,5 +27,5 @@ export const NAV = [
 
 // カードに出す国の略号（国旗の絵文字はWindowsで表示されないため文字で出す）
 export const COUNTRY_CODE: Record<string, string> = {
-  アメリカ: 'USA', イギリス: 'UK', 日本: 'JPN', カナダ: 'CAN', ドイツ: 'GER', スイス: 'SUI', オーストラリア: 'AUS',
+  アメリカ: 'USA', イギリス: 'UK', 日本: 'JPN', カナダ: 'CAN', ドイツ: 'GER', スイス: 'SUI', オーストラリア: 'AUS', フランス: 'FRA', オランダ: 'NED',
 };
