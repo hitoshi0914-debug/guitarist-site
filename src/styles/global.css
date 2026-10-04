@@ -320,6 +320,7 @@ a.sns-btn:hover { transform: translateY(-2px); border-color: var(--accent); colo
   .st-follow-suffix { display: none; }
 }
 
-/* カード名は改行させず、長い名前はカード幅に合わせて少し縮める */
+/* カード名は単語の途中で改行させず、長い名前は「・」の後ろで折り返す。文字はカード幅に合わせて少し縮める */
 .tcard-frame { container-type: inline-size; }
-.tcard-ja { white-space: nowrap; font-size: min(20px, 8cqi); }
+.tcard-ja { font-size: min(20px, 8cqi); }
+.tcard-ja-part { display: inline-block; white-space: nowrap; }
