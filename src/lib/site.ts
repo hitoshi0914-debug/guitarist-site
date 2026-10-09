@@ -4,8 +4,10 @@ export const SITE = {
   url: 'https://queensofshred.com',
   // Googleアドセンスの審査に通ったら Cloudflare Pages の環境変数 PUBLIC_ADSENSE_CLIENT に ca-pub-… を入れる
   adsenseClient: import.meta.env.PUBLIC_ADSENSE_CLIENT ?? '',
-  // GA4 の測定ID（G-…）。未設定なら計測タグを出さない
-  gaId: import.meta.env.PUBLIC_GA_ID ?? '',
+  // GA4 の測定ID（G-…）。本番（master のビルド）だけ計測し、確認用ブランチ・開発中はタグを出さない
+  gaId:
+    import.meta.env.PUBLIC_GA_ID ??
+    (process.env.CF_PAGES_BRANCH === 'master' ? 'G-LJDR40V0CB' : ''),
 };
 
 // ストリートチーム日本のSNS（空のものは「準備中」表示）
