@@ -15,8 +15,10 @@ interface Props {
   noindex?: boolean;
   /** SNSシェア時のサムネイル画像（public からのパス、1200x630）。未指定はサイト共通画像 */
   ogImage?: string;
+  /** 構造化データ（JSON-LD）。人物ページの Person・パンくずなど */
+  jsonLd?: object | object[];
 }
-const { title, description = `${SITE.tagline}。ニタ・ストラウスをはじめ海外の女性ギタリストの経歴・機材・来日情報を、出典つきでまとめます。`, hasEnglish = false, noAds = false, noindex = false, ogImage = '/images/og/og-default.png' } = Astro.props;
+const { title, description = `${SITE.tagline}。ニタ・ストラウスをはじめ海外の女性ギタリストの経歴・機材・来日情報を、出典つきでまとめます。`, hasEnglish = false, noAds = false, noindex = false, ogImage = '/images/og/og-default.png', jsonLd } = Astro.props;
 const ogImageUrl = new URL(ogImage, SITE.url).href;
 const fullTitle = title ? `${title} | ${SITE.name}` : `${SITE.name} | ${SITE.tagline}`;
 const canonical = new URL(Astro.url.pathname, SITE.url).href;
@@ -52,6 +54,7 @@ const enPath = Astro.url.pathname.replace(/^\/ja\//, '/en/');
     <meta name="twitter:title" content={fullTitle} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImageUrl} />
+    {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Metal+Mania&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" />

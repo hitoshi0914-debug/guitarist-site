@@ -324,3 +324,7 @@ a.sns-btn:hover { transform: translateY(-2px); border-color: var(--accent); colo
 .tcard-frame { container-type: inline-size; }
 .tcard-ja { font-size: min(20px, 8cqi); }
 .tcard-ja-part { display: inline-block; white-space: nowrap; }
+
+/* 人物ページ冒頭の一文（検索結果の説明にも使われやすい要約） */
+.lead { margin: .4rem 0 .6rem; line-height: 1.8; }
+.related-list li { margin: .3rem 0; }
