@@ -12,6 +12,7 @@ import Icon from '../../../components/Icon.astro';
 import SectionTitle from '../../../components/SectionTitle.astro';
 import SnsLinks from '../../../components/SnsLinks.astro';
 import StreetTeamBanner from '../../../components/StreetTeamBanner.astro';
+import { SITE } from '../../../lib/site';
 import { artists, timeline, gear, gearVideos, songs, japan, byArtist, latestCheck, GEAR_CATEGORIES, type Artist } from '../../../lib/data';
 
 export function getStaticPaths() {
@@ -32,12 +33,71 @@ const sns = [
 ].filter(([, url]) => url) as [string, string][];
 const CAT_ICON: Record<string, string> = { guitar: 'guitar', amp: 'amp', effects: 'pedal' };
 const isNita = a.id === 'nita-strauss';
+// 検索でよく使われる別表記（例：ニタストラウス、Nita Strauss、Hurricane Nita）
+const nameNoDot = a.name_ja.replace(/・/g, '');
+const aliases = [...new Set([nameNoDot, a.name_en, a.nickname].filter((n) => n && n !== a.name_ja))];
+const fullName = a.name_en && a.name_en !== a.name_ja ? `${a.name_ja}（${a.name_en}）` : a.name_ja;
+const leadAliases = aliases.filter((n) => n !== a.nickname);
+const pageTitle = `${fullName}｜ギタリストの経歴・使用機材・来日情報`;
+const firstPoint = points[0] ? `${points[0].replace(/。$/, '')}。` : '';
+const pageDescription = `${fullName}は${a.country ? `${a.country}の` : ''}ギタリスト。${firstPoint}経歴・バンド変遷・使用ギターとアンプ・おすすめ曲・来日情報を出典つきで解説します。`;
+const lead = [
+  `${a.name_ja}${leadAliases.length ? `（${leadAliases.join('／')}）` : ''}は、${a.country ? `${a.country}の` : ''}ギタリスト。`,
+  a.nickname && `愛称は「${a.nickname}」。`,
+  a.current_band && `現在の活動：${a.current_band}。`,
+  a.main_guitar && `メインギター：${a.main_guitar}。`,
+].filter(Boolean).join('');
+
+// 同じバンド・ツアーに関わった人を「関連するギタリスト」として内部リンクする
+const bandKey = (b: string) => b.split('「')[0].trim().toLowerCase();
+const IGNORE_BANDS = new Set(['ソロ', 'youtube']);
+const myBands = new Set(tl.map((t) => bandKey(t.band)).filter((b) => !IGNORE_BANDS.has(b)));
+const related = artists
+  .filter((o) => o.id !== a.id)
+  .map((o) => ({ o, shared: [...new Set(byArtist(timeline, o.id).map((t) => bandKey(t.band)))].filter((b) => myBands.has(b)) }))
+  .filter((r) => r.shared.length > 0);
+const sharedLabel = (o: Artist) => {
+  const names = byArtist(timeline, o.id).map((t) => t.band).filter((b) => myBands.has(bandKey(b)));
+  return [...new Set(names.map((b) => b.split('「')[0].trim()))].join('・');
+};
+const others = artists.filter((o) => o.id !== a.id && !related.some((r) => r.o.id === o.id)).slice(0, Math.max(0, 4 - related.length));
+
+const pageUrl = new URL(`/ja/artists/${a.id}/`, SITE.url).href;
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'ProfilePage',
+    url: pageUrl,
+    name: pageTitle,
+    inLanguage: 'ja',
+    ...(checkedOn && { dateModified: checkedOn }),
+    mainEntity: {
+      '@type': 'Person',
+      name: a.name_en,
+      alternateName: [a.name_ja, ...aliases.filter((n) => n !== a.name_en)],
+      jobTitle: 'ギタリスト',
+      description: a.bio_ja,
+      ...(a.photo_url && { image: new URL(a.photo_url, SITE.url).href }),
+      ...(a.country && { nationality: a.country }),
+      ...(a.official_site && { url: a.official_site }),
+      sameAs: sns.map(([, url]) => url).filter((u) => u !== a.official_site),
+    },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'トップ', item: new URL('/ja/', SITE.url).href },
+      { '@type': 'ListItem', position: 2, name: a.name_ja, item: pageUrl },
+    ],
+  },
+];
 const jump = [
   ['bio', '経歴', 'profile'], ['bands', 'バンド', 'history'], ['gear', '機材', 'guitar'],
   ['songs', '動画', 'play'], ['japan', '来日', 'plane'], ['sns', 'SNS', 'link'],
 ];
 ---
-<Base title={`${a.name_ja}（${a.name_en}）`} description={`${a.name_ja}（${a.name_en}）の経歴・バンド変遷・使用機材・おすすめ曲・来日情報・公式SNSを出典つきでまとめています。`}>
+<Base title={pageTitle} description={pageDescription} jsonLd={jsonLd}>
   <nav class="crumbs"><a href="/ja/">トップ</a> / <span>{a.name_ja}</span></nav>
 
   <section class="artist-top">
@@ -45,6 +105,7 @@ const jump = [
     <div class="artist-summary">
       <p class="kicker">{a.name_en}</p>
       <h1 class="h1">{a.name_ja} <DraftBadge row={a} /></h1>
+      <p class="lead">{lead}</p>
       <TrustBar checkedOn={checkedOn} />
       <ul class="points">
         {points.map((p) => <li><Icon name="star" size={16} class="point-icon" /><span>{p}</span></li>)}
@@ -65,12 +126,12 @@ const jump = [
   <AdSlot />
 
   <section class="section">
-    <SectionTitle icon="profile" en="PROFILE" id="bio">経歴</SectionTitle>
+    <SectionTitle icon="profile" en="PROFILE" id="bio">{a.name_ja}の経歴</SectionTitle>
     <p>{a.bio_ja}</p>
   </section>
 
   <section class="section">
-    <SectionTitle icon="history" en="HISTORY" id="bands">バンド変遷</SectionTitle>
+    <SectionTitle icon="history" en="HISTORY" id="bands">{a.name_ja}のバンド変遷</SectionTitle>
     {tl.length === 0 ? <p class="muted">調査中です。</p> : (
       <ol class="timeline">
         {tl.map((t) => (
@@ -87,7 +148,7 @@ const jump = [
   </section>
 
   <section class="section">
-    <SectionTitle icon="guitar" en="GEAR" id="gear">使用機材</SectionTitle>
+    <SectionTitle icon="guitar" en="GEAR" id="gear">{a.name_ja}の使用機材</SectionTitle>
     {gr.length === 0 ? <p class="muted">調査中です。</p> : (
       <ul class="gear-cards">
         {gr.map((g) => (
@@ -112,7 +173,7 @@ const jump = [
   <AdSlot />
 
   <section class="section">
-    <SectionTitle icon="play" en="VIDEOS" id="songs">おすすめ曲・公式動画</SectionTitle>
+    <SectionTitle icon="play" en="VIDEOS" id="songs">{a.name_ja}のおすすめ曲・公式動画</SectionTitle>
     {sg.length === 0 ? <p class="muted">準備中です。公式YouTubeから選んで追加します。</p> : (
       <div class="video-grid">
         {sg.map((s) => (
@@ -128,7 +189,7 @@ const jump = [
   </section>
 
   <section class="section">
-    <SectionTitle icon="plane" en="IN JAPAN" id="japan">来日情報</SectionTitle>
+    <SectionTitle icon="plane" en="IN JAPAN" id="japan">{a.name_ja}の来日情報</SectionTitle>
     {jp.length === 0 ? <p class="muted">調査中です。</p> : (
       <ul class="plain-list">
         {jp.map((j) => (
@@ -139,11 +200,20 @@ const jump = [
   </section>
 
   <section class="section">
-    <SectionTitle icon="link" en="OFFICIAL LINKS" id="sns">公式SNS・リンク</SectionTitle>
+    <SectionTitle icon="link" en="OFFICIAL LINKS" id="sns">{a.name_ja}の公式SNS・リンク</SectionTitle>
     <SnsLinks links={sns} />
   </section>
 
   <EditorNote text={a.editor_note_ja} />
+
+  <section class="section">
+    <SectionTitle icon="star" en="RELATED" id="related">{related.length > 0 ? `${a.name_ja}と関わりのあるギタリスト` : 'ほかの女性ギタリスト'}</SectionTitle>
+    <ul class="plain-list related-list">
+      {related.map(({ o }) => <li><a href={`/ja/artists/${o.id}/`}>{o.name_ja}{o.name_en !== o.name_ja && `（${o.name_en}）`}</a><span class="muted small">：{sharedLabel(o)}つながり</span></li>)}
+      {others.map((o) => <li><a href={`/ja/artists/${o.id}/`}>{o.name_ja}{o.name_en !== o.name_ja && `（${o.name_en}）`}</a></li>)}
+    </ul>
+    <p><a class="more" href="/ja/">女性ギタリスト一覧（全{artists.length}人）を見る</a></p>
+  </section>
 
   {isNita && <StreetTeamBanner />}
 
