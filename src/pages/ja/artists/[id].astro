@@ -70,7 +70,8 @@ const jsonLd = [
     url: pageUrl,
     name: pageTitle,
     inLanguage: 'ja',
-    ...(checkedOn && { dateModified: checkedOn }),
+    // Googleは日時＋タイムゾーンを求めるので、確認日（YYYY-MM-DD）を日本時間0時の形にする
+    ...(/^\d{4}-\d{2}-\d{2}$/.test(checkedOn) && { dateModified: `${checkedOn}T00:00:00+09:00` }),
     mainEntity: {
       '@type': 'Person',
       name: a.name_en,
