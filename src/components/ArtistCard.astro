@@ -14,7 +14,7 @@ const initials = a.name_en.split(' ').map((w) => w[0]).join('');
 <Tag class={`tcard tcard-${size}`} href={link ? `/ja/artists/${a.id}/` : undefined} style={`--card:${a.color || '#ff2bd6'}`}>
   <div class="tcard-frame">
     <div class="tcard-top">
-      <span class="tcard-no">No.{String(a.order).padStart(3, '0')}</span>
+      <span class="tcard-no">No.{String(a.order).padStart(3, '0')}{a.legend === '1' && <span class="tcard-legend"><Icon name="crown" size={12} />LEGEND</span>}</span>
       <DraftBadge row={a} />
     </div>
     <div class="tcard-art">

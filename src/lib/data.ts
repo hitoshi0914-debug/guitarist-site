@@ -28,7 +28,7 @@ function load<T extends Row>(name: string): T[] {
 export const isDraft = (r: Row) => r.status !== 'approved';
 
 export type Artist = Row & {
-  id: string; order: string; featured: string; name_ja: string; name_en: string; nickname: string;
+  id: string; order: string; featured: string; legend: string; name_ja: string; name_en: string; nickname: string;
   country: string; current_band: string; main_guitar: string; signature_song: string;
   points_ja: string; bio_ja: string; editor_note_ja: string;
   official_site: string; instagram: string; x: string; facebook: string; youtube: string; tiktok: string;

@@ -7,9 +7,11 @@ import Icon from '../../components/Icon.astro';
 import SectionTitle from '../../components/SectionTitle.astro';
 import { artists, news } from '../../lib/data';
 const featured = artists.filter((a) => a.featured === '1');
-const others = artists.filter((a) => a.featured !== '1' && a.country !== '日本');
+// レジェンド（legend=1）は「レジェンド」枠に別に並べる
+const legends = artists.filter((a) => a.featured !== '1' && a.legend === '1');
+const others = artists.filter((a) => a.featured !== '1' && a.legend !== '1' && a.country !== '日本');
 // 日本のギタリストは「日本のシュレッド・クイーン」として別に並べる
-const japan = artists.filter((a) => a.featured !== '1' && a.country === '日本');
+const japan = artists.filter((a) => a.featured !== '1' && a.legend !== '1' && a.country === '日本');
 ---
 <Base hasEnglish={false}>
   <section class="hero">
@@ -35,6 +37,16 @@ const japan = artists.filter((a) => a.featured !== '1' && a.country === '日本'
         </div>
       ))}
       {others.map((a) => <ArtistCard artist={a} />)}
+    </section>
+  )}
+
+  {legends.length > 0 && (
+    <section class="section" aria-label="レジェンド">
+      <SectionTitle icon="crown" en="LEGENDS">レジェンド</SectionTitle>
+      <p class="muted small">道を切り開いてきた女性ギタリストたち。</p>
+      <div class="card-grid">
+        {legends.map((a) => <ArtistCard artist={a} />)}
+      </div>
     </section>
   )}
 
