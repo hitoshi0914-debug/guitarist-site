@@ -328,3 +328,6 @@ a.sns-btn:hover { transform: translateY(-2px); border-color: var(--accent); colo
 /* 人物ページ冒頭の一文（検索結果の説明にも使われやすい要約） */
 .lead { margin: .4rem 0 .6rem; line-height: 1.8; }
 .related-list li { margin: .3rem 0; }
+
+/* レジェンド枠のマーク */
+.tcard-legend { display: inline-flex; align-items: center; gap: 3px; margin-left: 8px; padding: 1px 7px; border-radius: 999px; background: linear-gradient(90deg, #f5c542, #ffdf7e); color: #1a1205; font-size: 11px; letter-spacing: .08em; vertical-align: middle; }

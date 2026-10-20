@@ -5,7 +5,7 @@
 
 | ファイル | 中身 |
 |---|---|
-| artists.csv | 人物。カード・要点・SNS・写真クレジット |
+| artists.csv | 人物。カード・要点・SNS・写真クレジット。legend=1 でトップの「レジェンド」枠に入り、カードに LEGEND マーク |
 | timeline.csv | バンド変遷（年表） |
 | gear.csv | 使用機材 |
 | gear_videos.csv | 機材が映る動画（YouTube埋め込み。メーカー・販売店・音楽メディアの公式チャンネルのみ） |
