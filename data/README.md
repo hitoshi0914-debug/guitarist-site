@@ -9,7 +9,9 @@
 | timeline.csv | バンド変遷（年表） |
 | gear.csv | 使用機材 |
 | gear_videos.csv | 機材が映る動画（YouTube埋め込み。メーカー・販売店・音楽メディアの公式チャンネルのみ） |
-| songs.csv | おすすめ曲（公式YouTube） |
+| songs.csv | 代表曲・公式動画（公式YouTube。`source_url` は動画のURL） |
+| career.csv | 経歴の「主なできごと」年表（1行1つのできごと。`year` が空なら最後に表示） |
+| discography.csv | 代表作（アルバム・シングル・参加作・映像）。`kind` はアルバム／シングル／参加アルバム／映像など |
 | japan.csv | 来日情報 |
 | glossary.csv | 機材用語集 |
 | news.csv | 更新情報 |

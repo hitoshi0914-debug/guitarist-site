@@ -13,7 +13,7 @@ import SectionTitle from '../../../components/SectionTitle.astro';
 import SnsLinks from '../../../components/SnsLinks.astro';
 import StreetTeamBanner from '../../../components/StreetTeamBanner.astro';
 import { SITE } from '../../../lib/site';
-import { artists, timeline, gear, gearVideos, songs, japan, byArtist, latestCheck, GEAR_CATEGORIES, type Artist } from '../../../lib/data';
+import { artists, timeline, gear, gearVideos, songs, career, discography, japan, byArtist, latestCheck, GEAR_CATEGORIES, type Artist } from '../../../lib/data';
 
 export function getStaticPaths() {
   return artists.map((artist) => ({ params: { id: artist.id }, props: { artist } }));
@@ -24,7 +24,9 @@ const gr = byArtist(gear, a.id);
 const gv = byArtist(gearVideos, a.id);
 const sg = byArtist(songs, a.id);
 const jp = byArtist(japan, a.id);
-const checkedOn = latestCheck([a], tl, gr, sg, jp);
+const cr = byArtist(career, a.id);
+const dc = byArtist(discography, a.id);
+const checkedOn = latestCheck([a], tl, gr, sg, jp, cr, dc);
 const points = a.points_ja.split('|').filter(Boolean);
 const years = (f: string, t: string) => (!f ? '時期調査中' : t === f ? f : `${f}〜${t}`);
 const sns = [
@@ -38,9 +40,13 @@ const nameNoDot = a.name_ja.replace(/・/g, '');
 const aliases = [...new Set([nameNoDot, a.name_en, a.nickname].filter((n) => n && n !== a.name_ja))];
 const fullName = a.name_en && a.name_en !== a.name_ja ? `${a.name_ja}（${a.name_en}）` : a.name_ja;
 const leadAliases = aliases.filter((n) => n !== a.nickname);
-const pageTitle = `${fullName}｜ギタリストの経歴・使用機材・来日情報`;
+// 検索は「ニタストラウス」のように中黒なしで打たれることが多いので、タイトルにも両方の表記を入れる
+const titleName = a.name_en && a.name_en !== a.name_ja
+  ? `${a.name_ja}（${nameNoDot !== a.name_ja ? `${nameNoDot}／` : ''}${a.name_en}）`
+  : a.name_ja;
+const pageTitle = `${titleName}｜経歴・${sg.length || dc.length ? '代表曲・' : ''}使用機材${jp.length ? '・来日情報' : ''}`;
 const firstPoint = points[0] ? `${points[0].replace(/。$/, '')}。` : '';
-const pageDescription = `${fullName}は${a.country ? `${a.country}の` : ''}ギタリスト。${firstPoint}経歴・バンド変遷・使用ギターとアンプ・おすすめ曲・来日情報を出典つきで解説します。`;
+const pageDescription = `${fullName}は${a.country ? `${a.country}の` : ''}ギタリスト。${firstPoint}経歴・代表作・代表曲・使用ギターとアンプ・来日情報を出典つきで解説します。`;
 const lead = [
   `${a.name_ja}${leadAliases.length ? `（${leadAliases.join('／')}）` : ''}は、${a.country ? `${a.country}の` : ''}ギタリスト。`,
   a.nickname && `愛称は「${a.nickname}」。`,
@@ -94,8 +100,9 @@ const jsonLd = [
   },
 ];
 const jump = [
-  ['bio', '経歴', 'profile'], ['bands', 'バンド', 'history'], ['gear', '機材', 'guitar'],
-  ['songs', '動画', 'play'], ['japan', '来日', 'plane'], ['sns', 'SNS', 'link'],
+  ['bio', '経歴', 'profile'], ['bands', 'バンド', 'history'],
+  ...(dc.length ? [['works', '作品', 'star']] : []), ['gear', '機材', 'guitar'],
+  ['songs', '代表曲', 'play'], ['japan', '来日', 'plane'], ['sns', 'SNS', 'link'],
 ];
 ---
 <Base title={pageTitle} description={pageDescription} jsonLd={jsonLd}>
@@ -129,6 +136,21 @@ const jump = [
   <section class="section">
     <SectionTitle icon="profile" en="PROFILE" id="bio">{a.name_ja}の経歴</SectionTitle>
     <p>{a.bio_ja}</p>
+    {cr.length > 0 && (
+      <>
+        <h3 class="sub-title">{a.name_ja}の主なできごと</h3>
+        <ol class="timeline career">
+          {cr.map((c) => (
+            <li>
+              <span class="tl-year">{c.year || '—'}</span>
+              <span class="tl-role">{c.text_ja}</span>
+              <SourceLink url={c.source_url} label={c.source_label} />
+              <DraftBadge row={c} />
+            </li>
+          ))}
+        </ol>
+      </>
+    )}
   </section>
 
   <section class="section">
@@ -147,6 +169,26 @@ const jump = [
       </ol>
     )}
   </section>
+
+  {dc.length > 0 && (
+    <section class="section">
+      <SectionTitle icon="star" en="WORKS" id="works">{a.name_ja}の代表作（アルバム・作品）</SectionTitle>
+      <ul class="disc-list">
+        {dc.map((d) => (
+          <li class="disc-item">
+            <span class="disc-year">{d.year || '—'}</span>
+            <div>
+              <strong class="disc-title">{d.title}</strong>
+              <span class="disc-kind">{d.kind}{d.label && `／${d.label}`}</span>
+              {d.note_ja && <p class="disc-note">{d.note_ja}</p>}
+              <SourceLink url={d.source_url} label={d.source_label} />
+              <DraftBadge row={d} />
+            </div>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )}
 
   <section class="section">
     <SectionTitle icon="guitar" en="GEAR" id="gear">{a.name_ja}の使用機材</SectionTitle>
@@ -174,7 +216,7 @@ const jump = [
   <AdSlot />
 
   <section class="section">
-    <SectionTitle icon="play" en="VIDEOS" id="songs">{a.name_ja}のおすすめ曲・公式動画</SectionTitle>
+    <SectionTitle icon="play" en="VIDEOS" id="songs">{a.name_ja}の代表曲・公式動画</SectionTitle>
     {sg.length === 0 ? <p class="muted">準備中です。公式YouTubeから選んで追加します。</p> : (
       <div class="video-grid">
         {sg.map((s) => (

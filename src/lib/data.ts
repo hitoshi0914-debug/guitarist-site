@@ -39,6 +39,8 @@ export type Timeline = Row & { artist_id: string; year_from: string; year_to: st
 export type Gear = Row & { artist_id: string; category: string; item: string; maker: string; maker_url: string; illust: string; note_ja: string; image_url: string; image_credit: string; image_license: string; image_source_url: string; image_note: string; source_url: string; source_label: string; checked_on: string };
 export type GearVideo = Row & { artist_id: string; youtube_id: string; title_ja: string; channel: string; note_ja: string; source_url: string; source_label: string; checked_on: string };
 export type Song = Row & { artist_id: string; title: string; credit: string; year: string; youtube_id: string; note_ja: string; source_url: string; source_label: string; checked_on: string };
+export type Career = Row & { artist_id: string; year: string; text_ja: string; source_url: string; source_label: string; checked_on: string };
+export type Disc = Row & { artist_id: string; year: string; title: string; kind: string; label: string; note_ja: string; source_url: string; source_label: string; checked_on: string };
 export type JapanVisit = Row & { artist_id: string; date: string; event_ja: string; place_ja: string; source_url: string; source_label: string; checked_on: string };
 export type Term = Row & { term_ja: string; reading: string; term_en: string; desc_ja: string };
 export type ShopItem = Row & { artist_id: string; item: string; kind: string; shop_name: string; shop_url: string; affiliate_url: string; price_note: string; ships_ja: string; note_ja: string; image_url: string; image_credit: string; image_license: string; illust: string; source_url: string; source_label: string; checked_on: string };
@@ -49,6 +51,10 @@ export const timeline = load<Timeline>('timeline');
 export const gear = load<Gear>('gear');
 export const gearVideos = load<GearVideo>('gear_videos');
 export const songs = load<Song>('songs');
+// 年が空の行は最後に回す（並びは CSV の順を保つ）
+const byYear = <T extends { year: string }>(rows: T[]) => rows.map((r, i) => ({ r, i })).sort((a, b) => (a.r.year || '9999').localeCompare(b.r.year || '9999') || a.i - b.i).map(({ r }) => r);
+export const career = byYear(load<Career>('career'));
+export const discography = byYear(load<Disc>('discography'));
 export const japan = load<JapanVisit>('japan').sort((a, b) => b.date.localeCompare(a.date));
 export const glossary = load<Term>('glossary').sort((a, b) => a.reading.localeCompare(b.reading, 'ja'));
 export const shopItems = load<ShopItem>('shop_items');

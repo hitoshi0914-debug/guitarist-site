@@ -1,15 +1,15 @@
 artist_id,year_from,year_to,band,role_ja,source_url,source_label,checked_on,status
 nita-strauss,2011,2014,The Iron Maidens,ギター（ステージネーム Mega Murray）,https://www.nitastrauss.com/,公式,,approved
-nita-strauss,2014,,Alice Cooper,ツアーギタリスト,https://alicecooper.com/,公式,,approved
+nita-strauss,2014,,Alice Cooper,ツアーギタリスト（2022年はDemi Lovatoのツアーで離脱、2023年に復帰）,https://alicecooper.com/,公式,2026-11-03,approved
 nita-strauss,2018,,ソロ,ソロアーティスト,https://www.nitastrauss.com/,公式,,approved
-nita-strauss,2022,2022,Demi Lovato,ツアーギタリスト,https://www.nitastrauss.com/,公式,,approved
+nita-strauss,2022,2022,Demi Lovato,ツアーギタリスト,https://www.nitastrauss.com/,公式,2026-11-03,approved
 courtney-cox,2008,2023,The Iron Maidens,リードギター（ステージネーム Adriana Smith）,https://cc-shred.com/,公式,,approved
 courtney-cox,2023,,Burning Witches,リードギター,https://cc-shred.com/,公式,,approved
 britt-lightning,,,Jaded,ギター,https://www.brittlightning.com/,公式,,approved
 britt-lightning,2017,,Vixen,リードギター,https://vixenofficial.com/,公式,,approved
-anna-cara,,,Crossbone Skully,ギター,https://annacaraofficial.com/,公式,,approved
-anna-cara,,,Storace,リードギター,https://annacaraofficial.com/,公式,,approved
-anna-cara,2026,2026,Alice Cooper,ツアーギタリスト,https://alicecooper.com/,公式,,approved
+anna-cara,2022,,Crossbone Skully,ギター,https://www.guitarguitar.co.uk/news/142352/,インタビュー,2026-11-03,approved
+anna-cara,2024,,Storace,ギター（2024年のアルバム『Crossfire』に参加、2026年2月に正式加入）,https://www.guitarguitar.co.uk/news/142352/,インタビュー,2026-11-03,approved
+anna-cara,2026,2026,Alice Cooper,ツアーギタリスト（ニタ・ストラウスの産休中の代役）,https://alicecooper.com/alice-cooper-introduces-new-guitarist-anna-cara/,公式,2026-11-03,approved
 nikki-stringfield,,,The Iron Maidens,ギター,https://www.nikki-stringfield.com/pages/about,公式,2026-10-04,approved
 nikki-stringfield,2019,,Heaven Below,ギター,https://www.nikki-stringfield.com/pages/about,公式,2026-10-04,approved
 nikki-stringfield,2019,,ソロ,ボーカル・ギター・作曲,https://www.nikki-stringfield.com/pages/about,公式,2026-10-04,approved
