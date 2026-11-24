@@ -9,7 +9,9 @@
 | timeline.csv | バンド変遷（年表） |
 | gear.csv | 使用機材 |
 | gear_videos.csv | 機材が映る動画（YouTube埋め込み。メーカー・販売店・音楽メディアの公式チャンネルのみ） |
-| songs.csv | 代表曲・公式動画（公式YouTube。`source_url` は動画のURL） |
+| songs.csv | 代表曲・公式動画（公式YouTube。`source_url` は動画のURL）。`point_ja` に「聴きどころ」、その出典を `point_source_url` / `point_source_label` に |
+| style.csv | 奏法の特徴（1行1項目。`order` 順。1行でもあるとページタイトルが「奏法・使用機材・代表曲」型になる） |
+| relations.csv | ギタリスト同士のつながり（`kind`＝奏法／同じ時代／共演／影響など、`reason_ja`＝理由）。`artist_id` と `other_id` の両方のページの「つながりのあるギタリスト」に出る。出典がない行は編集部の見立て |
 | career.csv | 経歴の「主なできごと」年表（1行1つのできごと。`year` が空なら最後に表示） |
 | discography.csv | 代表作（アルバム・シングル・参加作・映像）。`kind` はアルバム／シングル／参加アルバム／映像など |
 | japan.csv | 来日情報 |
@@ -22,7 +24,7 @@
   - 本番ビルドでは `approved` の行だけが表示されます。
   - `npm run dev`、環境変数 `SHOW_DRAFTS=1`、Cloudflare Pages の master 以外のブランチ（確認用）では `draft` も「確認待ち」バッジ付きで表示されます。
 - `source_url` … 出典URL
-- `source_label` … `公式` または `インタビュー`
+- `source_label` … `公式`（本人・メーカー・レーベル）／`インタビュー`（本人の発言が載った記事）／`資料`（報道・事典などの記録）
 - `checked_on` … 確認日（YYYY-MM-DD）
 
 ## スプレッドシートから取り込む

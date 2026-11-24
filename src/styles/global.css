@@ -95,6 +95,7 @@ a.tcard:hover { transform: translateY(-4px) rotate(-.5deg); box-shadow: 0 16px 4
 .source-label { font-weight: 700; border-radius: 4px; padding: 0 6px; color: #111; }
 .source-official .source-label { background: var(--accent); }
 .source-interview .source-label { background: #20d5ff; }
+.source-reference .source-label { background: #c9c9d1; }
 
 /* entry links */
 .entry-grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); margin-top: 40px; }
@@ -339,3 +340,13 @@ a.sns-btn:hover { transform: translateY(-2px); border-color: var(--accent); colo
 
 /* レジェンド枠のマーク */
 .tcard-legend { display: inline-flex; align-items: center; gap: 3px; margin-left: 8px; padding: 1px 7px; border-radius: 999px; background: linear-gradient(90deg, #f5c542, #ffdf7e); color: #1a1205; font-size: 11px; letter-spacing: .08em; vertical-align: middle; }
+
+/* 奏法の特徴 */
+.style-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; }
+@media (min-width: 720px) { .style-list { grid-template-columns: 1fr 1fr; } }
+.style-item { background: var(--bg-2); border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 10px; padding: 12px 14px; }
+.style-item h3 { font-size: 16px; margin: 0 0 6px; display: flex; gap: 6px; align-items: center; }
+.style-item p { margin: 0 0 6px; line-height: 1.75; }
+.song-point { display: block; margin-top: 4px; }
+.song-point b { color: var(--accent); }
+.relation-kind { display: inline-block; font-size: 12px; border: 1px solid var(--accent); color: var(--accent); border-radius: 999px; padding: 0 8px; margin-left: 6px; }
