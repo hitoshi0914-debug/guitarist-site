@@ -38,7 +38,11 @@ export type Artist = Row & {
 export type Timeline = Row & { artist_id: string; year_from: string; year_to: string; band: string; role_ja: string; source_url: string; source_label: string; checked_on: string };
 export type Gear = Row & { artist_id: string; category: string; item: string; maker: string; maker_url: string; illust: string; note_ja: string; image_url: string; image_credit: string; image_license: string; image_source_url: string; image_note: string; source_url: string; source_label: string; checked_on: string };
 export type GearVideo = Row & { artist_id: string; youtube_id: string; title_ja: string; channel: string; note_ja: string; source_url: string; source_label: string; checked_on: string };
-export type Song = Row & { artist_id: string; title: string; credit: string; year: string; youtube_id: string; note_ja: string; source_url: string; source_label: string; checked_on: string };
+export type Song = Row & { artist_id: string; title: string; credit: string; year: string; youtube_id: string; note_ja: string; source_url: string; source_label: string; checked_on: string; point_ja?: string; point_source_url?: string; point_source_label?: string };
+/** 奏法の特徴（1行1項目。order順に表示） */
+export type Style = Row & { artist_id: string; order: string; title_ja: string; text_ja: string; source_url: string; source_label: string; checked_on: string };
+/** 似た奏法・同じ時代・共演などのつながり。artist_id ⇄ other_id の両方のページに出る */
+export type Relation = Row & { artist_id: string; other_id: string; kind: string; reason_ja: string; source_url: string; source_label: string; checked_on: string };
 export type Career = Row & { artist_id: string; year: string; text_ja: string; source_url: string; source_label: string; checked_on: string };
 export type Disc = Row & { artist_id: string; year: string; title: string; kind: string; label: string; note_ja: string; source_url: string; source_label: string; checked_on: string };
 export type JapanVisit = Row & { artist_id: string; date: string; event_ja: string; place_ja: string; source_url: string; source_label: string; checked_on: string };
@@ -51,6 +55,8 @@ export const timeline = load<Timeline>('timeline');
 export const gear = load<Gear>('gear');
 export const gearVideos = load<GearVideo>('gear_videos');
 export const songs = load<Song>('songs');
+export const styles = load<Style>('style').sort((a, b) => Number(a.order) - Number(b.order));
+export const relations = load<Relation>('relations');
 // 年が空の行は最後に回す（並びは CSV の順を保つ）
 const byYear = <T extends { year: string }>(rows: T[]) => rows.map((r, i) => ({ r, i })).sort((a, b) => (a.r.year || '9999').localeCompare(b.r.year || '9999') || a.i - b.i).map(({ r }) => r);
 export const career = byYear(load<Career>('career'));

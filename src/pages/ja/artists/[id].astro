@@ -13,7 +13,7 @@ import SectionTitle from '../../../components/SectionTitle.astro';
 import SnsLinks from '../../../components/SnsLinks.astro';
 import StreetTeamBanner from '../../../components/StreetTeamBanner.astro';
 import { SITE } from '../../../lib/site';
-import { artists, timeline, gear, gearVideos, songs, career, discography, japan, byArtist, latestCheck, GEAR_CATEGORIES, type Artist } from '../../../lib/data';
+import { artists, timeline, gear, gearVideos, songs, career, discography, japan, styles, relations, byArtist, latestCheck, GEAR_CATEGORIES, type Artist } from '../../../lib/data';
 
 export function getStaticPaths() {
   return artists.map((artist) => ({ params: { id: artist.id }, props: { artist } }));
@@ -26,7 +26,8 @@ const sg = byArtist(songs, a.id);
 const jp = byArtist(japan, a.id);
 const cr = byArtist(career, a.id);
 const dc = byArtist(discography, a.id);
-const checkedOn = latestCheck([a], tl, gr, sg, jp, cr, dc);
+const st = byArtist(styles, a.id);
+const checkedOn = latestCheck([a], tl, gr, sg, jp, cr, dc, st);
 const points = a.points_ja.split('|').filter(Boolean);
 const years = (f: string, t: string) => (!f ? '時期調査中' : t === f ? f : `${f}〜${t}`);
 const sns = [
@@ -44,9 +45,12 @@ const leadAliases = aliases.filter((n) => n !== a.nickname);
 const titleName = a.name_en && a.name_en !== a.name_ja
   ? `${a.name_ja}（${nameNoDot !== a.name_ja ? `${nameNoDot}／` : ''}${a.name_en}）`
   : a.name_ja;
-const pageTitle = `${titleName}｜経歴・${sg.length || dc.length ? '代表曲・' : ''}使用機材${jp.length ? '・来日情報' : ''}`;
+// 奏法の特徴があるページは「奏法・機材・代表曲」を前に出す（「〇〇 奏法」「〇〇 機材」で探す人向け）
+const pageTitle = st.length
+  ? `${titleName}｜奏法・使用機材・代表曲${jp.length ? '・来日' : ''}`
+  : `${titleName}｜経歴・${sg.length || dc.length ? '代表曲・' : ''}使用機材${jp.length ? '・来日情報' : ''}`;
 const firstPoint = points[0] ? `${points[0].replace(/。$/, '')}。` : '';
-const pageDescription = `${fullName}は${a.country ? `${a.country}の` : ''}ギタリスト。${firstPoint}経歴・代表作・代表曲・使用ギターとアンプ・来日情報を出典つきで解説します。`;
+const pageDescription = `${fullName}は${a.country ? `${a.country}の` : ''}ギタリスト。${firstPoint}${st.length ? '奏法の特徴、代表曲の聴きどころ、' : ''}経歴・代表作・使用ギターとアンプ・来日情報を出典つきで解説します。`;
 const lead = [
   `${a.name_ja}${leadAliases.length ? `（${leadAliases.join('／')}）` : ''}は、${a.country ? `${a.country}の` : ''}ギタリスト。`,
   a.nickname && `愛称は「${a.nickname}」。`,
@@ -66,7 +70,13 @@ const sharedLabel = (o: Artist) => {
   const names = byArtist(timeline, o.id).map((t) => t.band).filter((b) => myBands.has(bandKey(b)));
   return [...new Set(names.map((b) => b.split('「')[0].trim()))].join('・');
 };
-const others = artists.filter((o) => o.id !== a.id && !related.some((r) => r.o.id === o.id)).slice(0, Math.max(0, 4 - related.length));
+// relations.csv の「似た奏法・同じ時代・共演」などのつながり（どちら側のページにも出す）
+const myRelations = relations.filter((r) => r.artist_id === a.id || r.other_id === a.id);
+const relationWith = (o: Artist) => myRelations.find((r) => r.artist_id === o.id || r.other_id === o.id);
+const linked = myRelations
+  .map((r) => ({ r, o: artists.find((x) => x.id === (r.artist_id === a.id ? r.other_id : r.artist_id)) }))
+  .filter((x): x is { r: typeof relations[number]; o: Artist } => !!x.o && !related.some((y) => y.o.id === x.o!.id));
+const others = artists.filter((o) => o.id !== a.id && !related.some((r) => r.o.id === o.id) && !linked.some((l) => l.o.id === o.id)).slice(0, Math.max(0, 4 - related.length - linked.length));
 
 const pageUrl = new URL(`/ja/artists/${a.id}/`, SITE.url).href;
 const jsonLd = [
@@ -100,7 +110,7 @@ const jsonLd = [
   },
 ];
 const jump = [
-  ['bio', '経歴', 'profile'], ['bands', 'バンド', 'history'],
+  ['bio', '経歴', 'profile'], ...(st.length ? [['style', '奏法', 'star']] : []), ['bands', 'バンド', 'history'],
   ...(dc.length ? [['works', '作品', 'star']] : []), ['gear', '機材', 'guitar'],
   ['songs', '代表曲', 'play'], ['japan', '来日', 'plane'], ['sns', 'SNS', 'link'],
 ];
@@ -152,6 +162,21 @@ const jump = [
       </>
     )}
   </section>
+
+  {st.length > 0 && (
+    <section class="section">
+      <SectionTitle icon="star" en="PLAY STYLE" id="style">{a.name_ja}の奏法の特徴</SectionTitle>
+      <ul class="style-list">
+        {st.map((x) => (
+          <li class="style-item">
+            <h3><Icon name="guitar" size={16} />{x.title_ja} <DraftBadge row={x} /></h3>
+            <p>{x.text_ja}</p>
+            <SourceLink url={x.source_url} label={x.source_label} />
+          </li>
+        ))}
+      </ul>
+    </section>
+  )}
 
   <section class="section">
     <SectionTitle icon="history" en="HISTORY" id="bands">{a.name_ja}のバンド変遷</SectionTitle>
@@ -216,7 +241,7 @@ const jump = [
   <AdSlot />
 
   <section class="section">
-    <SectionTitle icon="play" en="VIDEOS" id="songs">{a.name_ja}の代表曲・公式動画</SectionTitle>
+    <SectionTitle icon="play" en="VIDEOS" id="songs">{a.name_ja}の代表曲・聴きどころ</SectionTitle>
     {sg.length === 0 ? <p class="muted">準備中です。公式YouTubeから選んで追加します。</p> : (
       <div class="video-grid">
         {sg.map((s) => (
@@ -224,7 +249,9 @@ const jump = [
             {s.youtube_id && (
               <iframe src={`https://www.youtube-nocookie.com/embed/${s.youtube_id}`} title={s.title} loading="lazy" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
             )}
-            <figcaption>{s.title}{s.year && `（${s.year}）`} {s.note_ja} <SourceLink url={s.source_url} label={s.source_label} /> <DraftBadge row={s} /></figcaption>
+            <figcaption>{s.title}{s.year && `（${s.year}）`} {s.note_ja} <SourceLink url={s.source_url} label={s.source_label} /> <DraftBadge row={s} />
+              {s.point_ja && <span class="song-point"><b>聴きどころ：</b>{s.point_ja} <SourceLink url={s.point_source_url} label={s.point_source_label} /></span>}
+            </figcaption>
           </figure>
         ))}
       </div>
@@ -232,8 +259,8 @@ const jump = [
   </section>
 
   <section class="section">
-    <SectionTitle icon="plane" en="IN JAPAN" id="japan">{a.name_ja}の来日情報</SectionTitle>
-    {jp.length === 0 ? <p class="muted">調査中です。</p> : (
+    <SectionTitle icon="plane" en="IN JAPAN" id="japan">{a.name_ja}の来日情報・日本とのつながり</SectionTitle>
+    {jp.length === 0 ? <p class="muted">公式サイトや報道で確認できた来日公演は、まだありません。わかりしだい追加します。</p> : (
       <ul class="plain-list">
         {jp.map((j) => (
           <li><time>{j.date}</time> {j.event_ja}（{j.place_ja}） <SourceLink url={j.source_url} label={j.source_label} /> <DraftBadge row={j} /></li>
@@ -250,9 +277,10 @@ const jump = [
   <EditorNote text={a.editor_note_ja} />
 
   <section class="section">
-    <SectionTitle icon="star" en="RELATED" id="related">{related.length > 0 ? `${a.name_ja}と関わりのあるギタリスト` : 'ほかの女性ギタリスト'}</SectionTitle>
+    <SectionTitle icon="star" en="RELATED" id="related">{related.length + linked.length > 0 ? `${a.name_ja}とつながりのあるギタリスト` : 'ほかの女性ギタリスト'}</SectionTitle>
     <ul class="plain-list related-list">
-      {related.map(({ o }) => <li><a href={`/ja/artists/${o.id}/`}>{o.name_ja}{o.name_en !== o.name_ja && `（${o.name_en}）`}</a><span class="muted small">：{sharedLabel(o)}つながり</span></li>)}
+      {related.map(({ o }) => <li><a href={`/ja/artists/${o.id}/`}>{o.name_ja}{o.name_en !== o.name_ja && `（${o.name_en}）`}</a><span class="muted small">：{sharedLabel(o)}つながり{relationWith(o) && `。${relationWith(o)!.reason_ja}`}</span>{relationWith(o) && <> <SourceLink url={relationWith(o)!.source_url} label={relationWith(o)!.source_label} /></>}</li>)}
+      {linked.map(({ r, o }) => <li><a href={`/ja/artists/${o.id}/`}>{o.name_ja}{o.name_en !== o.name_ja && `（${o.name_en}）`}</a><span class="relation-kind">{r.kind}</span><span class="muted small">：{r.reason_ja}</span> <SourceLink url={r.source_url} label={r.source_label} /></li>)}
       {others.map((o) => <li><a href={`/ja/artists/${o.id}/`}>{o.name_ja}{o.name_en !== o.name_ja && `（${o.name_en}）`}</a></li>)}
     </ul>
     <p><a class="more" href="/ja/">女性ギタリスト一覧（全{artists.length}人）を見る</a></p>
